@@ -1,0 +1,155 @@
+<!DOCTYPE html>
+<html lang="zh-CN" data-theme="dark">
+<head>
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width,initial-scale=1.0"/>
+<title>Flux · 导航站</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&family=JetBrains+Mono:wght@400;600&display=swap" rel="stylesheet">
+<!-- 防闪烁：在 CSS 渲染前立即同步主题 -->
+<script>
+(function(){
+  const saved = localStorage.getItem('navhub-theme');
+  if (saved) {
+    document.documentElement.setAttribute('data-theme', saved);
+  } else {
+    const prefersDark = window.matchMedia('(prefers-color-scheme: dark)').matches;
+    document.documentElement.setAttribute('data-theme', prefersDark ? 'dark' : 'light');
+  }
+})();
+</script>
+<link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+<!-- ══ SIDEBAR ══════════════════════════════════════════ -->
+<aside class="sidebar">
+  <div class="logo">
+    <div class="logo-icon">
+      <svg width="20" height="20" viewBox="0 0 20 20" fill="none">
+        <rect x="4" y="3" width="3" height="14" rx="1.5" fill="white"/>
+        <rect x="4" y="3" width="10" height="3" rx="1.5" fill="white"/>
+        <rect x="4" y="9" width="7.5" height="2.5" rx="1.25" fill="rgba(255,255,255,0.6)"/>
+        <circle cx="15.5" cy="4.5" r="1.5" fill="rgba(255,255,255,0.85)"/>
+      </svg>
+    </div>
+    <div class="logo-wordmark">
+      <div class="logo-title">Flux</div>
+      <div class="logo-ver">精选导航 · v4</div>
+    </div>
+  </div>
+
+  <nav class="nav-wrap">
+    <a class="nav-item active" href="#" data-cat="all"   onclick="setNav(this)"><span class="nav-icon">⊞</span><span>全部网站</span><span class="nav-count" id="nc-all">—</span></a>
+    <a class="nav-item"        href="#" data-cat="fav"   onclick="setNav(this)"><span class="nav-icon">⭐</span><span>我的收藏</span><span class="nav-count" id="nc-fav">0</span></a>
+
+    <div class="nav-group-label">内容 & 创作</div>
+    <a class="nav-item" href="#" data-cat="ai"    onclick="setNav(this)"><span class="nav-icon">🤖</span><span>AI 工具</span><span class="nav-count" id="nc-ai"></span></a>
+    <a class="nav-item" href="#" data-cat="dev"   onclick="setNav(this)"><span class="nav-icon">💻</span><span>开发工具</span><span class="nav-count" id="nc-dev"></span></a>
+    <a class="nav-item" href="#" data-cat="edu"   onclick="setNav(this)"><span class="nav-icon">📚</span><span>教育学习</span><span class="nav-count" id="nc-edu"></span></a>
+    <a class="nav-item" href="#" data-cat="tools" onclick="setNav(this)"><span class="nav-icon">🛠</span><span>实用工具</span><span class="nav-count" id="nc-tools"></span></a>
+    <a class="nav-item" href="#" data-cat="read"  onclick="setNav(this)"><span class="nav-icon">📖</span><span>阅读书籍</span><span class="nav-count" id="nc-read"></span></a>
+
+    <div class="nav-group-label">影音 & 娱乐</div>
+    <a class="nav-item" href="#" data-cat="media" onclick="setNav(this)"><span class="nav-icon">🎬</span><span>影音娱乐</span><span class="nav-count" id="nc-media"></span></a>
+    <a class="nav-item" href="#" data-cat="audio" onclick="setNav(this)"><span class="nav-icon">🎵</span><span>音乐播客</span><span class="nav-count" id="nc-audio"></span></a>
+    <a class="nav-item" href="#" data-cat="game"  onclick="setNav(this)"><span class="nav-icon">🎮</span><span>游戏平台</span><span class="nav-count" id="nc-game"></span></a>
+
+    <div class="nav-group-label">资源 & 系统</div>
+    <a class="nav-item" href="#" data-cat="dl"    onclick="setNav(this)"><span class="nav-icon">⬇️</span><span>软件下载</span><span class="nav-count" id="nc-dl"></span></a>
+    <a class="nav-item" href="#" data-cat="bt"    onclick="setNav(this)"><span class="nav-icon">🌊</span><span>BT 资源</span><span class="nav-count" id="nc-bt"></span></a>
+    <a class="nav-item" href="#" data-cat="mob"   onclick="setNav(this)"><span class="nav-icon">📱</span><span>移动应用</span><span class="nav-count" id="nc-mob"></span></a>
+    <a class="nav-item" href="#" data-cat="linux" onclick="setNav(this)"><span class="nav-icon">🐧</span><span>Linux/macOS</span><span class="nav-count" id="nc-linux"></span></a>
+    <a class="nav-item" href="#" data-cat="intl"  onclick="setNav(this)"><span class="nav-icon">🌍</span><span>国际社区</span><span class="nav-count" id="nc-intl"></span></a>
+  </nav>
+
+  <div class="sidebar-foot">
+    <button class="sfoot-btn" id="themeBtn" onclick="toggleTheme()" title="切换主题">
+      <span class="sfoot-icon">🌙</span><span>主题</span>
+    </button>
+    <button class="sfoot-btn" onclick="toggleEditor()" title="站点管理">
+      <span class="sfoot-icon">⚙️</span><span>管理</span>
+    </button>
+  </div>
+</aside>
+
+<!-- ══ MAIN ═════════════════════════════════════════════ -->
+<div class="main">
+
+  <!-- topbar -->
+  <div class="topbar">
+    <div class="search-wrap">
+      <span class="search-ico">🔍</span>
+      <input class="search-input" id="searchInput" type="text"
+             placeholder="搜索名称、描述、标签或网址…" oninput="doSearch(this.value)">
+    </div>
+    <div class="topbar-right">
+      <div class="view-toggle">
+        <button class="view-btn active" id="vgrid" onclick="setView('grid')" title="网格视图">⊞ 网格</button>
+        <button class="view-btn"        id="vlist" onclick="setView('list')" title="列表视图">☰ 列表</button>
+      </div>
+    </div>
+  </div>
+
+  <button class="back-to-top" id="backToTop" onclick="scrollToTop()" title="返回顶部">↑</button>
+
+  <!-- hero -->
+  <div class="hero">
+    <div class="hero-scenarios" id="heroScenarios"></div>
+    <div class="hero-picks"     id="heroPicks"></div>
+    <div class="hero-foot">
+      <div class="hstat"><span class="hstat-n" id="totalNum">—</span><span class="hstat-l">收录站点</span></div>
+      <div class="hstat"><span class="hstat-n">13</span><span class="hstat-l">分类</span></div>
+      <div class="hstat"><span class="hstat-n" id="favCountFoot">0</span><span class="hstat-l">已收藏</span></div>
+      <button class="hero-foot-tip" onclick="refreshPicks()">🔀 换一批</button>
+    </div>
+  </div>
+
+  <div class="content" id="content"></div>
+</div>
+
+<!-- ══ EDITOR MODAL ══════════════════════════════════════ -->
+<div class="editor-modal" id="editorModal">
+  <div class="editor-box">
+    <div class="editor-header">
+      <span class="editor-title">⚙️ 站点管理</span>
+      <button class="editor-close" onclick="toggleEditor()">✕</button>
+    </div>
+    <div class="editor-body">
+      <div class="editor-row"><label class="editor-label">网站名称</label><input class="editor-input" id="editName" placeholder="输入名称"></div>
+      <div class="editor-row"><label class="editor-label">网址 URL</label><input class="editor-input" id="editUrl"  placeholder="https://"></div>
+      <div class="editor-row"><label class="editor-label">分类</label><select class="editor-select" id="editCat"></select></div>
+      <div class="editor-row"><label class="editor-label">描述</label><input class="editor-input" id="editDesc" placeholder="简要描述"></div>
+      <div class="editor-row"><label class="editor-label">标签（逗号分隔）</label><input class="editor-input" id="editTags" placeholder="标签1,标签2"></div>
+      <div class="editor-row">
+        <label class="editor-label">徽章</label>
+        <select class="editor-select" id="editBadge">
+          <option value="">无</option>
+          <option value="hot">HOT</option>
+          <option value="new">NEW</option>
+          <option value="free">FREE</option>
+          <option value="cn">中文</option>
+          <option value="open">开源</option>
+        </select>
+      </div>
+      <div class="editor-actions">
+        <button class="editor-btn secondary" onclick="addSite()">➕ 添加</button>
+        <button class="editor-btn primary"   onclick="saveSite()">💾 保存</button>
+        <button class="editor-btn danger"    onclick="deleteSite()">🗑 删除</button>
+      </div>
+      <div class="import-export">
+        <div class="editor-label" style="margin-bottom:8px">📦 数据管理</div>
+        <div class="ie-btns">
+          <button class="ie-btn" onclick="exportData()">⬇️ 导出 JSON</button>
+          <button class="ie-btn" onclick="document.getElementById('importFile').click()">⬆️ 导入 JSON</button>
+          <input type="file" id="importFile" accept=".json" style="display:none" onchange="importData(this)">
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<script src="data.js"></script>
+<script src="main.js"></script>
+</body>
+</html>
