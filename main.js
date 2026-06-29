@@ -236,7 +236,7 @@ const _faviconCache = {};
 function faviconUrl(url) {
   try {
     const host = new URL(url).hostname;
-    return `https://icons.duckduckgo.com/ip3/${host}.ico`;
+    return `https://${host}/favicon.ico`;
   } catch { return ''; }
 }
 
