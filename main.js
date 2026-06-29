@@ -262,7 +262,7 @@ function hostOf(url) {
 function buildCard(s) {
   const ico    = faviconUrl(s.url);
   const badge  = s.badge && BADGE_CFG[s.badge] ? `<span class="card-badge ${BADGE_CFG[s.badge][0]}">${BADGE_CFG[s.badge][1]}</span>` : '';
-  const tagHtml= s.tags?.length ? `<div class="card-tags">${s.tags.map(t => `<span class="ctag">${t}</span>`).join('')}</div>` : '';
+  const tagHtml= s.tags?.length ? s.tags.map(t => `<span class="ctag">${t}</span>`).join('') : '';
   const isFav  = favorites.has(s.url);
   const favBtn = `<button class="fav-btn ${isFav ? 'active' : ''}" onclick="toggleFav(event,'${s.url}')" title="${isFav ? '取消收藏' : '收藏'}">${isFav ? '★' : '☆'}</button>`;
   const name_esc = s.name.replace(/'/g, "\\'");
@@ -275,12 +275,12 @@ function buildCard(s) {
       <div class="card-meta">
         <div class="card-name">${s.name}</div>
         <div class="card-host">${hostOf(s.url)}</div>
+        <div class="card-tags-row">${tagHtml}</div>
       </div>
       ${badge}${favBtn}
     </div>
     <div class="card-desc">${s.desc || ''}</div>
-    ${tagHtml}
-  </a>`;
+}
 }
 
 function getTagsForCat(cat) {

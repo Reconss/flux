@@ -464,3 +464,11 @@ body {
   .sec-hd { top: 50px; }
   .back-to-top { bottom: 72px; right: 12px; width: 38px; height: 38px; font-size: 14px; }
 }
+
+/* 卡片内标签行样式 */
+.card-tags-row { display: flex; gap: 3px; flex-wrap: wrap; margin-top: 4px; }
+.card-tags-row .ctag {
+  font-size: 9px; padding: 1px 5px; border-radius: 8px;
+  background: var(--surface3); color: var(--text-m);
+  border: 1px solid var(--border);
+}
