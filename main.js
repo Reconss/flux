@@ -280,7 +280,7 @@ function buildCard(s) {
       ${badge}${favBtn}
     </div>
     <div class="card-desc">${s.desc || ''}</div>
-}
+  </a>`;
 }
 
 function getTagsForCat(cat) {
