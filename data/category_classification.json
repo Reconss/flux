@@ -1,0 +1,46 @@
+{
+  "video": {
+    "name": "视频影视",
+    "subcategories": ["在线看", "下载", "网盘", "TV", "PC", "字幕", "神器"]
+  },
+  "anime": {
+    "name": "二次元",
+    "subcategories": ["动漫", "漫画", "下载", "神器"]
+  },
+  "music": {
+    "name": "音乐",
+    "subcategories": ["听歌", "无损音乐", "电台", "曲艺", "K歌"]
+  },
+  "reading": {
+    "name": "阅读",
+    "subcategories": ["电子书", "小说", "听书", "报刊杂志"]
+  },
+  "game": {
+    "name": "游戏",
+    "subcategories": ["游戏下载", "在线小游戏", "模拟器", "游戏工具"]
+  },
+  "entertainment": {
+    "name": "娱乐",
+    "subcategories": ["壁纸", "头像", "表情包", "短视频"]
+  },
+  "tool": {
+    "name": "工具",
+    "subcategories": ["在线工具", "下载工具", "浏览器插件", "效率工具"]
+  },
+  "learning": {
+    "name": "学习",
+    "subcategories": ["课程", "教程", "文档", "问答"]
+  },
+  "tech": {
+    "name": "技术",
+    "subcategories": ["开源项目", "API", "开发文档", "技术博客"]
+  },
+  "image": {
+    "name": "图片素材",
+    "subcategories": ["免费图片", "设计素材", "图标", "壁纸"]
+  },
+  "software": {
+    "name": "软件",
+    "subcategories": ["Windows", "Mac", "Linux", "Android", "iOS"]
+  }
+}

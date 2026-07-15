@@ -1,0 +1,31 @@
+# Hugo Configuration
+baseURL = "https://navigation-demo.vercel.app"
+languageCode = "zh-CN"
+title = "资源导航"
+theme = "ananke-submod"
+
+# Disable unwanted kinds
+disableKinds = ["taxonomy", "term", "sitemap", "RSS", "robotsTXT"]
+
+# Build timestamps
+buildDrafts = false
+buildFuture = false
+
+# Enable minification
+minify = true
+
+# Time zone
+timeZone = "Asia/Shanghai"
+
+# Comment out if not enabling external services
+# disqusShortname = ""
+# googleAnalytics = ""
+
+# Enable syntax highlighting
+pygmentsUseClasses = true
+pygmentsCodeFences = true
+pygmentsStyle = "monokai"
+
+# Markdown settings
+enableGitInfo = true
+next_desc = true

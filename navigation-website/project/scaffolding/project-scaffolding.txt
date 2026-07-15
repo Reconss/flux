@@ -1,0 +1,55 @@
+Project Scaffolding - Structure & Deliverables
+----------------------------------------------
+
+Task Breakdown (Hugo + Bootstrap + Custom UI):
+[ ] 1) Hugo Config & Theme Setup
+    - config.toml: baseURL, languages, menus, disableKinds, theme
+    - theme/ananke-submod: stable, minimal theme
+    
+[ ] 2) Component Styles (Custom CSS)
+    - custom.css: finesse brand palette, type utilities, animation utilities
+    - refined.css: refined polish (grain, vignette, micro-interactions)
+    
+[ ] 3) 2D Animation Engine (GSAP)
+    - gsap-setup.js: ScrollTrigger for scroll-linked animations
+    - custom animations: card fly-in, text reveal, parallax
+    
+[ ] 4) Reference Design System
+    - ref-docs/design-dna.txt
+    - ref-docs/product-ui.txt
+    - ref-docs/workflow-ui.txt
+    - ref-docs/brand-substrate.md
+    
+[ ] 5) Page Templates
+    - layouts/index.html: Hero section + 4-grid cards
+    - layouts/list.html: Category page with search
+    - layouts/detail.html: Individual resource page
+    - layouts/partials/navbar.html
+    - layouts/partials/footer.html
+    - layouts/partials/card.html
+    
+[ ] 6) Content Data (JSON)
+    - data/education.json: 10-15 educational resources
+    - data/developer.json: 10-15 tech resources
+    - data/tools.json: 10-15 life utilities
+    - data/entertainment.json: 10-15 entertainment sites
+    
+[ ] 7) Documentation
+    - docs/README.md: Setup instructions
+    - docs/01-教育学习.md: Educational category description
+    - docs/02-开发技术.md: Developer category description
+    - docs/03-生活实用.md: Life utilities category description
+    - docs/04-资讯娱乐.md: Entertainment category description
+
+Milestones:
+- M1: Basic scaffolding + brand palette (CSS) (complete)
+- M2: Hero section + 4 main cards (index.html + GSAP) 
+- M3: Category list pages + Search/Filter
+- M4: Detail pages + Content data entry
+- M5: Integration + Final polish + Pre-flight check
+
+Quality Gates:
+- Accessible (WCAG AA)
+- Performance (Core Web Vitals)
+- Responsive (Mobile, Tablet, Desktop)
+- Accessible Colors (4.5:1 for body)

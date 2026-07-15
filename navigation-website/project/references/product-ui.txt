@@ -1,0 +1,97 @@
+Product UI Reference - High Density Interfaces
+----------------------------------------------
+
+Reference: /Users/wangji/.codex/skills/finesse-ui/SKILL.md (product-ui.md)
+
+Scope: Product.register pages (dashboard, admin, analytics, data-heavy)
+
+1. SURFACE SYSTEM
+----------------
+
+Card Surfaces (with glass-tech and no flatness):
+  - Background: #0f172a (icon/card/surface) with subtle glass/reflection
+  - Border: rgba(255, 255, 255, 0.08) (translucent white)
+  - Shadow: Color-shadow, low opacity due to low contrast
+  
+2. DENSITY STRATEGY
+------------------
+
+Information Architecture (product pages):
+  - Principles: F-shaped vs Z-shaped reading patterns
+  - Focus: Read-heavy (40%) + Right sidebar with quick actions (60%)
+  - Clutter avoidance more important than physical density
+  - Select first, sort first, filter second
+  
+3. HEADER & NAVIGATION
+----------------------
+
+Fixed Top Navbar:
+  - Height: 72px
+  - Color: #0f172a with backdrop-blur-3px
+  - Mobile: Bottom tab bar or hamburger menu
+  
+Fix-ups:
+  - Minor site-wide language default (Chinese/En)
+  
+4. TYPE SCALE
+------------
+
+Fixed Type Scale (Heil/Inter system):
+  - System scale (tight/medium/wide): 212/24/290/350/420/480/560
+  - Base unit: 8px
+  - Line-height: 1.5 (body), 1.3 (others except display)
+
+5. MOTION
+--------
+
+Motion Philosophy:
+  - Feedback-only motion (hover/focus/active states)
+  - Interaction states for magnitude animations
+  - No zigzag or auto-loop relaxation (softer and more refined)
+  
+Progressive Motion Improvements:
+  - Page-level: page/scroll fade-in
+  - Section-level: slide-up stagger
+  - Component-level: card hover states
+
+6. DATA PRESENTATION
+--------------------
+
+Row Grid Architecture:
+  - Colorful fonts must be meaningful (gradient or strong accent) per UI 2.1
+  - Non-gradient fonts not allowed as markers for meaning
+  
+Reading Optimization:
+  - Maximum 20-25 rows per page
+  - Mini-pagination if more
+  
+Button/CTA:
+  - Primary: Desired user journey type
+  - Secondary: Additional actions, lighter (灰色 #cfd7df)
+  - Prominent CTAs: Multi-step route needs glowing/glowing textures
+  
+7. INTERACTION STATES
+---------------------
+
+Component Interactions:
+  - Hover: Scale 1.02, use feedback-only motion
+  - Focus: ring: 4px solid #3897f0 (brand color)
+  - Active: scale 0.98
+
+Read-only/Interactive Clarity:
+  - Read-only pages: distinguish interactive elements via visual affordances
+  - Interactive pages: clearly marked interactive nature
+  
+Read-to-Scroll:
+  - Hierarchical labels: breadcrumbs with swatch + hex code (e.g., [2PA1] #334155)
+  - Category expansion: subtle hover friction to inverse
+  - Medium-occurrence items: Steric enclosures with color distinction
+  - High-occurrence items: Row per item with row-level parentheses
+  
+ACCELERATING FLOW:
+  - Fallback to fallback: No separate fallback pattern
+  - Multi-step form scenarios: Only one per page
+  
+Raster Optimization:
+  - WebKit and Blink: 32px row grid (flat images), 2px padding
+  - Geometric patterns: 12px grid for geometric presets

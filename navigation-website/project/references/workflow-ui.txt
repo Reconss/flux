@@ -1,0 +1,70 @@
+Workflow UI Reference - Configure & Publish Interfaces
+--------------------------------------------------------
+
+Reference: /Users/wangji/.codex/skills/finesse-ui/SKILL.md (workflow-ui.md)
+
+Scope: Product.register operations (configure, publish, settings, wizard)
+
+Core UI mechanics:
+
+Title & title override:
+  - System should not use colspan="2" on small screens due to complexity
+  - Cadence - multi-step flow: multi-step form scenario
+  
+Then - Then split:
+  - Form workflow page in examples/: minimal (required)
+  - Purpose: multi-step route identification (one per page)  
+  - Configure -> Publish -> Commit
+  
+Where - Where (interface):
+  - Show both progress indicators and checklists together
+  - Show setup patterns and consumption patterns
+  
+Protocol:
+  1. Overview and immediate completion of the required RAT MONEY/COMBINATION physics
+  
+Where - Where (interface):
+
+Overview Sheet (overcoming Obstacle):
+  - From top-left row-stack: header/CTAs
+  - From top-right row-stack: account info/draft commit
+  
+One-Shot Operable Sheet:
+  - Row hack: no multiple form entries (but can have multiple dropdown groups)
+  - If over 20 rows, page split as needed
+  
+Row-stack/Row-grid with hover: multi-step forms should use Row-stack for critical signals and Row-grid for display contexts only after user completion of the required ROUNDS/COMBINATION triggers
+  
+Where - Where (interface):
+
+UI Scenarios:
+  - Setup patterns (wizard, configure settings): inputs in groups with validators
+  - Consumption patterns (viewing data, reading reports): read-only display with quick actions
+  
+Preferred aggregations:
+  - Summary-oriented: Top-level KPIs + derived totals (budget, count, sum)
+  - Read-only control store interface: read-only summary + interactive controls (ranked summary)
+  
+Workflow Shell:
+  - Fixed top navbar
+  - Numbered horizontal cards in a wide sea
+  - 10px vertical padding, last section no bottom padding
+  
+Best Practices:
+  - Avoid generic form bodies with repeaters
+  - When form body is generic, break repeaters into separate pages or add dedicated deliverables
+  
+Calculated Expertise:
+  - Live-preview aside is a best practice, can be optional
+  - Derived totals panel: computed values for review (budget, count, sum)
+  - Draft/Commit workflow: draft, commit (release variant)
+
+Pre-Flight Checklist:
+1) Input fields, groups and repeaters labeling
+2) Animated loading states for external fetches
+3) Error handling for all major error states
+4) Keyboard navigation and tab indices
+5) Responsive behavior for all variable-width components
+6) Accessibility labels for icons and interactive elements
+7) Loading skeletons for initialization
+8) Preview or derived totals for forms with user-deliverables

@@ -1,0 +1,122 @@
+[
+  {
+    "name": "硬核指南",
+    "url": "https://yinghezhinan.com/",
+    "description": "专注免费影音娱乐，分类包括影视、音乐、游戏、壁纸、看书等",
+    "category": "entertainment"
+  },
+  {
+    "name": "MoeGirl",
+    "url": "https://zh.moegirl.org.cn/",
+    "description": "ACG百科全书，动漫二次元资源导航",
+    "category": "entertainment"
+  },
+  {
+    "name": "CN人大",
+    "url": "https://www.cnnude.com/",
+    "description": "综合资源导航，包含多种分类",
+    "category": "mixed"
+  },
+  {
+    "name": "GuanHelper",
+    "url": "https://guanhelper.com/",
+    "description": "资源导航网站，整合各类实用工具",
+    "category": "mixed"
+  },
+  {
+    "name": "Kangsoku",
+    "url": "https://kangsoku.com/",
+    "description": "日本动漫影视资源导航",
+    "category": "entertainment"
+  },
+  {
+    "name": "资源库",
+    "url": "https://ziyuanku.top/",
+    "description": "影视资源导航网站",
+    "category": "entertainment"
+  },
+  {
+    "name": "爱收集",
+    "url": "https://www.aimv.cn/",
+    "description": "资源收藏导航",
+    "category": "mixed"
+  },
+  {
+    "name": "一个工具箱",
+    "url": "https://www.atoolbox.net/",
+    "description": "在线工具集合导航",
+    "category": "tools"
+  },
+  {
+    "name": "图欧吧",
+    "url": "https://www.tuua.cn/",
+    "description": "资源导航，包含学习娱乐",
+    "category": "mixed"
+  },
+  {
+    "name": "上班地址",
+    "url": "https://www.sban.cn/",
+    "description": "资源导航网站",
+    "category": "mixed"
+  },
+  {
+    "name": "A8音乐",
+    "url": "https://www.a8a9.com/",
+    "description": "音乐资源导航",
+    "category": "music"
+  },
+  {
+    "name": "我爱资源网",
+    "url": "https://www.52zy.com/",
+    "description": "综合资源导航",
+    "category": "mixed"
+  },
+  {
+    "name": "天天导航",
+    "url": "https://www.123dh.cn/",
+    "description": "网址导航",
+    "category": "mixed"
+  },
+  {
+    "name": "龙轩导航",
+    "url": "https://www.ilxdh.com/",
+    "description": "综合网址导航",
+    "category": "mixed"
+  },
+  {
+    "name": "快云导航",
+    "url": "https://www.52ky.cn/",
+    "description": "资源导航网站",
+    "category": "mixed"
+  },
+  {
+    "name": "科星资源网",
+    "url": "https://www.kexingzy.com/",
+    "description": "综合资源导航",
+    "category": "mixed"
+  },
+  {
+    "name": "APP软件库",
+    "url": "https://www.appnml.com/",
+    "description": "软件应用资源导航",
+    "category": "tools"
+  },
+  {
+    "name": "爱Q技术网",
+    "url": "https://www.iqishui.cn/",
+    "description": "技术资源导航",
+    "category": "tech"
+  },
+  {
+    "name": "极客湾",
+    "url": "https://www.geekwan.com/",
+    "description": "科技资源导航",
+    "category": "tech"
+  },
+  {
+    "name": "吾爱论坛",
+    "url": "https://www.52pojie.cn/",
+    "description": "技术论坛资源",
+    "category": "tech"
+  }
+]

@@ -1,0 +1,45 @@
+Deployment Strategy
+-------------------
+
+Tech Stack Alignment:
+  - Static Site Generator: Hugo v0.119.0
+  - Styling: Bootstrap 5 (provided by user) + Custom CSS (brand palette, finesse patterns)
+  - Animation Engine: GSAP (GreenSock)
+  - JavaScript: Vanilla JS
+  - Cloud Provider: Vercel (recommended) or GitHub Pages
+
+Remote Repositories:
+  - Source Repository: GitHub (main branch)
+  - Deployment Target: Vercel (best for velocity) or GitHub Pages
+  - Branching Strategy: main (production), develop (development), feature branches
+
+Deployment Process:
+1. Push to GitHub
+2. Configure Vercel/GitHub Pages to deploy from branch/tag
+3. Verify CDN cache invalidation
+4. Run final pre-flight checks
+
+Remote Options:
+  - Vercel (Recommended):
+    - Recommended score: 8/9
+    - CDN: Global Edge Network, auto-optimization
+    - Preview deployments: automatic for PRs
+    - Custom domains: out-of-the-box support
+    - Automatic SSL: yes
+    - Pricing: Free tier for personal/professional use
+  
+  - GitHub Pages:
+    - Recommended score: 7/9
+    - Issue: mode checks for dark mode only
+    - SEO: Lacks analytics and preview deployments
+    - Continuous deployment: less automatic
+
+Recommended Path:
+  - Use Vercel for rapid deployment and preview workflows
+  - Use GitHub Pages as backup or if Vercel not available
+  - Enable both for redundancy (Vercel primary, GH Pages backup)
+
+Environments:
+  - Development: localhost (Hugo dev server)
+  - Staging: Dedicated branch preview (Vercel/Turbo)
+  - Production: main branch deployment

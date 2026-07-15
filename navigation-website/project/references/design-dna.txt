@@ -1,0 +1,75 @@
+Design DNA - Brand Substrate + Universal Craft Floor
+--------------------------------------------------
+
+Reference: /Users/wangji/.codex/skills/finesse-ui/SKILL.md (design-dna.md)
+
+1. GRANULARITY: Substrate Layering
+--------------------------------
+
+Brand Layer (applies to brand.register pages):
+  - Grain: Fixed SVG feTurbulence noise layer at opacity .025-.05
+    * Effect: Kills flat vector slop, adds premium texture
+    * Both light and dark pages need grain, just adjust opacity
+  
+2. TYPE TENSION: Typography Override
+------------------------------------
+
+Brand pages use clamped display typography:
+  - Clamp(3rem, 8vw + 1rem, 6rem) for display headings
+  - Tracking: -.02 to -.045em (negative tracking for tightness)
+  - Line-height: .86-.95 (crushed tight lines)
+  - Weights: 100-900 range, with extreme contrast (e.g., 900 against 300)
+
+3. COLOR SYSTEM (FINESSE ORIGINAL)
+----------------------------------
+
+Dark Mode (default for brand):
+  - Background: #0f172a (slate-900)
+  - Text: White with tinting
+  - Accent: #0066cc (low-sat blue, not default bright blue)
+  - Border: rgba(255, 255, 255, 0.1) (translucent white)
+  
+Light Mode:
+  - Background: #f8fafd (slate-50)
+  - Text: #0f172a (slate-900), never pure #000
+  - Accent: #0066cc (same blue as dark, not inverted)
+  - Border: rgba(0, 0, 0, 0.08) (translucent black)
+
+4. MOTION LANGUAGE
+-----------------
+
+Card/Panel Motion:
+  - Staggered fly-in from bottom: 0y -> 20px with cubic-bezier timing
+  - Duration: 600-800ms
+  
+Text Animation:
+  - Split letters/words with stagger reveal
+  - Duration: 500-700ms total
+  
+Scroll-Linked:
+  - Parallax: traffic-speed dots/matrix layers
+  - ScrollTrigger: text reveals on scroll
+  
+Reduced Motion Fallback:
+  - All animations strip and show final state
+  - duration set to 0 (.01ms) in CSS media query
+
+5. CONTRAST FLOOR: Universal Craft Floor
+----------------------------------------
+NOTES: This applies universally to both brand AND product pages.
+
+a) No pure #ffffff or #000000:
+   - Every neutral has a slight tint toward brand hue
+   
+b) Translucent Borders:
+   - Dark pages: rgba(255, 255, 255, .06-.22)
+   - Light pages: rgba(0, 0, 0, .06-.08)
+   - Never hard #333 lines
+   
+c) Color Lock (MANDATORY):
+   - Once accent is picked, owns the whole page
+   - e.g., If rose accent chosen, NO teal badge
+   
+d) Tinted Shadows:
+   - Shadow has color shadow instead of pure black
+   - Brand-token adjusted shadow with low opacity

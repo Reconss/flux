@@ -1,0 +1,35 @@
+Web Framework Decision Tree
+--------------------------
+
+Primary Choices:
+- Static Site Generator: Hugo v0.119.0
+- Styling: Bootstrap 5 (for rapid responsive components) + Custom CSS (finesse design system)
+- Animation Engine: GSAP (GreenSock) with scroll-reveal
+- JavaScript: Vanilla JS (no frameworks needed for this scale)
+- Icons: Bootstrap Icons
+- CMS: JSON-based content files (no database)
+
+Reasoning for each choice:
+1. Hugo: 
+   - Fast static site generation (SSG)
+   - Clean templating (Hugo templates)
+   - Good for multi-language projects
+   - No PHP/MySQL dependency
+   
+2. Bootstrap 5:
+   - Pre-built responsive grid system
+   - Accessible components out of the box
+   - Easy integration with custom CSS
+   - Large ecosystem of plugins
+   
+3. GSAP:
+   - Smooth, performant animations
+   - ScrollTrigger for scroll-linked animations
+   - Lightweight (optional import for just what's needed)
+   - Browser + Node + React / Vue support
+   - No jQuery dependency in v2+ (though we'll use GSAP Core + ScrollTrigger)
+
+4. Vanilla JS:
+   - Zero build step (no webpack/parcel)
+   - Faster page load (not pulling in React/Vue just for small interactions)
+   - Direct DOM manipulation without abstraction overhead

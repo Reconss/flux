@@ -1,0 +1,28 @@
+[
+  {
+    "name": "Mojimoon.Github.Io",
+    "url": "https://mojimoon.github.io/wenku8/index.html",
+    "description": "来自硬核指南导航网站",
+    "category": "developer",
+    "tags": [
+      "导航网站",
+      "硬核指南"
+    ],
+    "rating": 4,
+    "language": "中文",
+    "verified": false
+  },
+  {
+    "name": "Codeflying.Net",
+    "url": "https://www.codeflying.net/?utm=cg&amp;cgv=920eppqew1",
+    "description": "来自硬核指南导航网站",
+    "category": "developer",
+    "tags": [
+      "导航网站",
+      "硬核指南"
+    ],
+    "rating": 4,
+    "language": "中文",
+    "verified": false
+  }
+]

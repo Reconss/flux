@@ -1,0 +1,373 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta name="description" content="中文资源导航 - 智慧整洁的资源聚合平台，涵盖教育学习、开发技术、生活实用、资讯娱乐四大分类" />
+  <meta name="theme-color" content="#0f172a" />
+  <title>{{ .Title }} - 资源导航</title>
+  
+  <!-- Bootstrap CDN -->
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+  
+  <!-- Google Fonts -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=Noto+Serif+SC:wght@400;700&display=swap" rel="stylesheet">
+  
+  <!-- Bootstrap Icons -->
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.0/font/bootstrap-icons.css" rel="stylesheet">
+  
+  <!-- Custom CSS -->
+  <link rel="stylesheet" href="/css/custom.css" />
+  <link rel="stylesheet" href="/css/refined.css" />
+  
+  <style>
+    .hero {
+      background: linear-gradient(135deg, #0f172a 0%, #1e293b 100%);
+      position: relative;
+      overflow: hidden;
+    }
+    
+    .hero-content {
+      position: relative;
+      z-index: 10;
+    }
+    
+    .hero-subtitle {
+      font-size: 1.25rem;
+      font-weight: 400;
+      color: var(--color-text-secondary);
+      max-width: 700px;
+      margin: 0 auto 2.5rem auto;
+    }
+    
+    .nav-link {
+      color: var(--color-text-secondary);
+      font-weight: 500;
+      font-size: 0.95rem;
+      transition: all 0.2s ease;
+      position: relative;
+    }
+    
+    .nav-link:hover, .nav-link.active {
+      color: var(--color-brand-primary) !important;
+    }
+  </style>
+</head>
+<body>
+  <!-- Skip to content link -->
+  <a href="#main-content" class="skip-link">Skip to content</a>
+  
+  <!-- Grain overlay -->
+  <div class="grain-overlay"></div>
+  
+  <!-- Vignette -->
+  <div class="vignette"></div>
+  
+  <!-- Navigation -->
+  <nav class="navbar navbar-expand-lg">
+    <div class="container-lg">
+      <a class="navbar-brand" href="/">
+        <i class="bi bi-book me-2"></i>资源导航
+      </a>
+      <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav">
+        <i class="bi bi-list"></i>
+      </button>
+      <div class="collapse navbar-collapse" id="navbarNav">
+        <ul class="navbar-nav ms-auto">
+          <li class="nav-item">
+            <a class="nav-link active" href="/">首页</a>
+          </li>
+          <li class="nav-item">
+            <a class="nav-link" href="/education.html">学习教育</a>
+          </li>
+          <li class="nav-item">
+            <a class="nav-link" href="/developer.html">开发技术</a>
+          </li>
+          <li class="nav-item">
+            <a class="nav-link" href="/tools.html">生活实用</a>
+          </li>
+          <li class="nav-item">
+            <a class="nav-link" href="/entertainment.html">资讯娱乐</a>
+          </li>
+        </ul>
+      </div>
+    </div>
+  </nav>
+  
+  <!-- Hero Section -->
+  <section class="hero py-5">
+    <div class="container-lg">
+      <div class="hero-content">
+        <h1 class="hero-title">中文资源导航</h1>
+        <div class="mb-4">
+          <span class="badge rounded-pill bg-primary me-2">已验证</span>
+          <span class="badge rounded-pill bg-success me-2">免费</span>
+          <span class="badge rounded-pill bg-info">中文友好</span>
+        </div>
+        <p class="hero-subtitle">
+          汇聚优质、免费、合法的中文资源聚合平台。
+          <br>涵盖教育学习、开发技术、生活实用、资讯娱乐四大分类。
+        </p>
+        <div class="d-flex justify-content-center gap-3">
+          <a href="#categories" class="btn btn-primary btn-lg">
+            <i class="bi bi-arrow-down-short me-2"></i>探索资源
+          </a>
+          <a href="#about" class="btn btn-outline-light btn-lg">
+            <i class="bi bi-info-circle me-2"></i>了解更多
+          </a>
+        </div>
+      </div>
+    </div>
+  </section>
+  
+  <!-- Categories Section -->
+  <section class="container-lg py-5" id="categories">
+    <div class="row g-4 mb-4">
+      <div class="col-12 text-center">
+        <h2 class="section-header" data-aos="fade-up">
+          <i class="bi bi-grid-fill me-3"></i>四大资源分类
+        </h2>
+      </div>
+    </div>
+    
+    <div class="grid-4">
+      <!-- Education -->
+      <div class="card category-card">
+        <div class="card-body">
+          <div class="category-icon">
+            <i class="bi bi-mortarboard-fill"></i>
+          </div>
+          <h3 class="card-title">学习教育</h3>
+          <p class="card-text">
+            中国大学MOOC、Coursera 开放课程、在线词典、英语学习平台
+          </p>
+          <a href="/education.html" class="btn btn-outline-primary btn-sm">
+            查看全部 <i class="bi bi-chevron-right ms-1"></i>
+          </a>
+        </div>
+      </div>
+      
+      <!-- Developer -->
+      <div class="card category-card">
+        <div class="card-body">
+          <div class="category-icon">
+            <i class="bi bi-code-slash"></i>
+          </div>
+          <h3 class="card-title">开发技术</h3>
+          <p class="card-text">
+            GitHub、Stack Overflow、MDN Web Docs、API文档聚合平台
+          </p>
+          <a href="/developer.html" class="btn btn-outline-primary btn-sm">
+            查看全部 <i class="bi bi-chevron-right ms-1"></i>
+          </a>
+        </div>
+      </div>
+      
+      <!-- Tools -->
+      <div class="card category-card">
+        <div class="card-body">
+          <div class="category-icon">
+            <i class="bi bi-tools"></i>
+          </div>
+          <h3 class="card-title">生活实用</h3>
+          <p class="card-text">
+            Unsplash、Pexels、站酷设计社区、云服务器监控工具、编码解码器
+          </p>
+          <a href="/tools.html" class="btn btn-outline-primary btn-sm">
+            查看全部 <i class="bi bi-chevron-right ms-1"></i>
+          </a>
+        </div>
+      </div>
+      
+      <!-- Entertainment -->
+      <div class="card category-card">
+        <div class="card-body">
+          <div class="category-icon">
+            <i class="bi bi-play-circle-fill"></i>
+          </div>
+          <h3 class="card-title">资讯娱乐</h3>
+          <p class="card-text">
+            Bilibili、澎湃新闻、36氪、InfoQ、网易云音乐、播客平台
+          </p>
+          <a href="/entertainment.html" class="btn btn-outline-primary btn-sm">
+            查看全部 <i class="bi bi-chevron-right ms-1"></i>
+          </a>
+        </div>
+      </div>
+    </div>
+  </section>
+  
+  <!-- About Section -->
+  <section class="container-lg py-5" id="about">
+    <div class="row g-4 align-items-center">
+      <div class="col-lg-6">
+        <h2 class="section-header mb-4" data-aos="fade-right">
+          <i class="bi bi-stars me-3"></i>为什么选择我们？
+        </h2>
+        <div class="card mb-3">
+          <div class="card-body">
+            <h5 class="card-title">
+              <i class="bi bi-shield-check me-2 text-primary"></i>合法合规
+            </h5>
+            <p class="card-text text-secondary">
+              所有资源均为合法、免费、开源服务，为您精选优质内容
+            </p>
+          </div>
+        </div>
+        <div class="card mb-3">
+          <div class="card-body">
+            <h5 class="card-title">
+              <i class="bi bi-translate me-2 text-primary"></i>中文友好
+            </h5>
+            <p class="card-text text-secondary">
+              中文界面设计，为您提供更好的浏览体验
+            </p>
+          </div>
+        </div>
+        <div class="card mb-3">
+          <div class="card-body">
+            <h5 class="card-title">
+              <i class="bi bi-lock me-2 text-primary"></i>安全可靠
+            </h5>
+            <p class="card-text text-secondary">
+              已验证的网站链接，祝您使用安全无忧
+            </p>
+          </div>
+        </div>
+      </div>
+      <div class="col-lg-6">
+        <div class="card">
+          <div class="card-body">
+            <h4 class="card-title mb-4">项目特色</h4>
+            <div class="list-group list-group-flush">
+              <div class="list-group-item">
+                <i class="bi bi-check-circle-fill text-success me-3"></i>
+                智能分类 - 四大分类覆盖学习、技术、生活、娱乐
+              </div>
+              <div class="list-group-item">
+                <i class="bi bi-check-circle-fill text-success me-3"></i>
+                快速访问 - 静态生成，全球 CDN 加速
+              </div>
+              <div class="list-group-item">
+                <i class="bi bi-check-circle-fill text-success me-3"></i>
+                响应式设计 - PC/平板/手机完美适配
+              </div>
+              <div class="list-group-item">
+                <i class="bi bi-check-circle-fill text-success me-3"></i>
+                深色模式 - 纯 CSS 实现主题切换
+              </div>
+              <div class="list-group-item">
+                <i class="bi bi-check-circle-fill text-success me-3"></i>
+                数据驱动 - JSON 格式，易于维护和扩展
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+  
+  <!-- Content Section -->
+  <section class="container-lg py-5">
+    <div class="row g-4 mb-4">
+      <div class="col-12 text-center">
+        <h2 class="section-header" data-aos="fade-up">
+          <i class="bi bi-file-text me-3"></i>最新收录
+        </h2>
+      </div>
+    </div>
+    
+    {{- range first 6 .Site.RegularPages}}
+      <div class="detail-card card mb-4">
+        <div class="card-body">
+          <div class="row">
+            <div class="col-md-2">
+              <i class="{{ .Params.icon }} fa-3x mb-3 text-primary"></i>
+            </div>
+            <div class="col-md-10">
+              <div class="d-flex justify-content-between align-items-start mb-2">
+                <h3 class="card-title h4 mb-0">{{ .Title }}</h3>
+                <span class="badge bg-primary ms-2">{{ .Params.category }}</span>
+              </div>
+              <p class="card-text mb-2">{{ .Params.description }}</p>
+              <div class="mb-2">
+                {{- range .Params.tags}}
+                  <span class="tag-pill">{{ . }}</span>
+                {{- end}}
+              </div>
+              <div class="d-flex justify-content-between align-items-center">
+                <div>
+                  <span class="text-secondary"><i class="bi bi-calendar me-1"></i>{{ .PublishDate.Format "2006-01-02" }}</span>
+                  <span class="text-secondary ms-4"><i class="bi bi-check-circle-fill me-1 text-success"></i>已验证</span>
+                </div>
+                <a href="{{ .RelPermalink }}" class="btn btn-primary btn-sm">
+                  访问网站 <i class="bi bi-arrow-right ms-1"></i>
+                </a>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    {{- end}}
+  </section>
+  
+  <!-- Footer -->
+  <footer class="footer">
+    <div class="container-lg">
+      <div class="row g-4">
+        <div class="col-md-4">
+          <h5 class="mb-3">
+            <i class="bi bi-book me-2"></i>资源导航
+          </h5>
+          <p class="text-secondary">
+            汇聚优质、免费、合法的中文资源聚合平台，为您提供优质的资源导航体验。
+          </p>
+          <div class="mt-4">
+            <a href="#" class="text-decoration-none text-secondary me-3"><i class="bi bi-github fa-lg"></i></a>
+            <a href="#" class="text-decoration-none text-secondary me-3"><i class="bi bi-twitter-x fa-lg"></i></a>
+            <a href="#" class="text-decoration-none text-secondary"><i class="bi bi-discord fa-lg"></i></a>
+          </div>
+        </div>
+        <div class="col-md-4">
+          <h5 class="mb-3">分类导航</h5>
+          <ul class="list-unstyled">
+            <li><a href="/education.html" class="text-decoration-none text-secondary">学习教育</a></li>
+            <li><a href="/developer.html" class="text-decoration-none text-secondary">开发技术</a></li>
+            <li><a href="/tools.html" class="text-decoration-none text-secondary">生活实用</a></li>
+            <li><a href="/entertainment.html" class="text-decoration-none text-secondary">资讯娱乐</a></li>
+          </ul>
+        </div>
+        <div class="col-md-4">
+          <h5 class="mb-3">关于我们</h5>
+          <p class="text-secondary">
+            本项目基于公共资源整理，所有链接均来自互联网上的公开资源。
+          </p>
+          <ul class="list-unstyled">
+            <li><i class="bi bi-shield-check text-success me-2"></i>合法合规</li>
+            <li><i class="bi bi-translate text-info me-2"></i>中文友好</li>
+            <li><i class="bi bi-lock text-primary me-2"></i>安全可靠</li>
+          </ul>
+        </div>
+      </div>
+      <hr class="border-light my-4" />
+      <div class="text-center">
+        <p class="text-secondary mb-0">
+          <i class="bi bi-copyright me-1"></i>2024 资源导航 | 基于 Hugo & Bootstrap 构建
+        </p>
+      </div>
+    </div>
+  </footer>
+  
+  <!-- Bootstrap JS Bundle -->
+  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+  
+  <!-- GSAP Animation -->
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/gsap.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/ScrollTrigger.min.js"></script>
+  
+  <!-- Custom Animation Script -->
+  <script src="/js/gsap-setup.js"></script>
+</body>
+</html>

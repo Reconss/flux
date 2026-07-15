@@ -1,0 +1,29 @@
+Static Assets Strategy
+----------------------
+
+Assets 1.0 Source Allocation for Web Deployment-ready:
+  - Logo: Custom SVG icon created from scratch
+  - Hero Image: Subtle gradient abstract artist-raw working-track (not AI-slop)
+  - Icons: Bootstrap Icons CDN
+  - Font: Google Fonts (Inter + Noto Serif SC for Chinese)
+  - Fonts/Debias: Load fonts directly with fallback (StackManager)
+  - FontFamily/Characters: Chinese size 16px/18px/20px galleys (no +font-size)
+  - Imagery: Unsplash/Pexels API for landscape/minimal (not AI-generated)
+  - Animations: CSS keyframes + GSAP animations
+  - Icons: No shadcn/ui icons or extra icons beyond Bootstrap Icons
+
+Asset 1.0 List:
+1. asset: logo.svg - Custom SVG logo (minimal, brand-appropriate)
+2. asset: hero-gradient.png - Subtle gradient background (artist's working track)
+3. asset: grain-overlay.svg - SVG noise texture (opacity 0.025)
+4. asset: active-state-icon.svg - Active state icons (optional pattern)
+
+Implement viewport settings:
+  - meta content width=device-width, initial-scale=1
+  - Light mode meta theme-color
+
+Implementation Details:
+  - Place in project/static/images/
+  - Use semantic filenames and consistent naming
+  - Optimize images (WebP/AVIF) for performance
+  - Lazy-load hero image and animations

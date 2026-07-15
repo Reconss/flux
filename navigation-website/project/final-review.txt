@@ -1,0 +1,81 @@
+Final Pre-Flight Review Checklist
+----------------------------------
+
+Yes/No Checklist:
+1. [ ] No pure #ffffff or #000000 used anywhere
+2. [ ] All borders use translucent variants (not solid #333)
+3. [ ] Color lock enforced: once accent chosen, no color switches mid-page
+4. [ ] Type contrast meets WCAG AA (4.5:1 minimum)
+5. [ ] All animated elements have prefers-reduced-motion fallback
+6. [ ] Logo/subheader/architectural-elements use constraint (no multiple eyebrow)
+7. [ ] Mobile responsive (viewports + hover-size constraints)
+8. [ ] Reduced motion terminal state exists (animation toggles to static)
+9. [ ] All reduced-motion animations hide (not show) original transition animations
+10. [ ] Component file uses code block-like aesthetic
+11. [ ] No code block-based: no stylized code/fake prompt/pseudo-terminal
+12. [ ] No code decoration on decorator-drop-adjacent (code - three-column card - decorator)
+13. [ ] Correct fixings (clipPath, ...) for light/Dark KPI panels, not overlay gradients
+14. [ ] Page has at least one layout family (uniquely / repeatedly / 2-3 families per 8-9 sections)
+15. [ ] Elastic vs. Fraction: Elements respond to user clicking (elastic), except for loading skeletons
+16. [ ] Row-stack vs. Row-grid: 
+     - Row-stack for critical signals
+     - Row-grid for display contexts (after user completion of required triggers)
+17. [ ] Multi-step route identification (one per page) 
+18. [ ] Setup analysis: complete, left (as options/organization), reasoning (including multi-step use cases)
+19. [ ] Contrast floor: background has no white/black, at least one deep grey/dark overall
+20. [ ] Code: Only synthetic copy (based on atoms/icons/interactions), never relying on human-generated copy
+
+Content Pre-Flight:
+1. [ ] All resources are legal, free, and verified
+2. [ ] All resources are organized into 4 categories (的教育学习, 开发技术, 生活实用, 资讯娱乐)
+3. [ ] JSON data files follow the specified schema (name, url, description, category, tags, rating, language, verified, launch_date)
+4. [ ] Category descriptions explain each resource type (brief + tags + source statements)
+5. [ ] Font sizes for Chinese are 16px/18px/20px (no +font-size modifiers)
+6. [ ] Hero has GSAP scroll-reveal animation
+7. [ ] Cards have staggered fly-in motion (600-800ms)
+8. [ ] Text animations show final state in reduced motion (inject with visibility transitions)
+9. [ ] Data representation pads with spaces to 2 decimal places for readability (if needed)
+10. [ ] Scale-ups of 2-3 are allowed for scale-ups/downs (nothing larger than scale-up by X factor or scale-down by Y factor causing fractional pixel values)
+
+Accessibility (A11y) Check:
+1. [ ] All buttons/links have keyboard focus indicators
+2. [ ] Skip-to-content link exists
+3. [ ] Alt text on all images
+4. [ ] Semantic HTML (header, main, nav, footer, section, article)
+5. [ ] ARIA labels where needed
+6. [ ] Contrast ratios checked (4.5:1 for body text)
+
+Performance Check:
+1. [ ] Images lazy-loaded (where applicable)
+2. [ ] Core Web Vitals: LCP < 2.5s, FID < 100ms, CLS < 0.1
+3. [ ] CSS minified
+4. [ ] JavaScript bundled/optimized
+5. [ ] CDN configured
+6. [ ] No blocking resources (inline critical CSS)
+
+SEO Check:
+1. [ ] Title tags on all pages
+2. [ ] Meta description on all pages
+3. [ ] OpenGraph tags for social sharing
+4. [ ] Semantic headings (H1, H2, H3 hierarchy)
+5. [ ] Internal linking strategy
+6. [ ] Sitemap.xml generated
+
+Deployment Check:
+1. [ ] Config deployed to Vercel/GH Pages
+2. [ ] Environment variables configured (if needed)
+3. [ ] Custom domain configured (if applicable)
+4. [ ] SSL certificates valid
+5. [ ] CDN cache invalidated
+6. [ ] Analytics installed (if applicable)
+
+Delivery Scope:
+- [ ] All branch deliverables:
+  - Design specification
+  - Code blocks (single-file: home, list, detail, partials)
+  - Project structure
+  - Deployment instructions
+  - Final checks
+- [ ] Documentation updated: README (setup guide), docs/* (category descriptions)
+- [ ] All deliverables merged into main and pushed to remote
+- [ ] Review and approvals obtained if needed

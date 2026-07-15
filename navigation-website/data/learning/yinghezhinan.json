@@ -1,0 +1,93 @@
+[
+  {
+    "name": "502Book.Com",
+    "url": "https://502book.com",
+    "description": "来自硬核指南导航网站",
+    "category": "learning",
+    "tags": [
+      "导航网站",
+      "硬核指南"
+    ],
+    "rating": 4,
+    "language": "中文",
+    "verified": false
+  },
+  {
+    "name": "Atimebook.Com",
+    "url": "https://atimebook.com",
+    "description": "来自硬核指南导航网站",
+    "category": "learning",
+    "tags": [
+      "导航网站",
+      "硬核指南"
+    ],
+    "rating": 4,
+    "language": "中文",
+    "verified": false
+  },
+  {
+    "name": "Audiobookbay.Lu",
+    "url": "https://audiobookbay.lu",
+    "description": "来自硬核指南导航网站",
+    "category": "learning",
+    "tags": [
+      "导航网站",
+      "硬核指南"
+    ],
+    "rating": 4,
+    "language": "中文",
+    "verified": false
+  },
+  {
+    "name": "Book.Tstrs.Me",
+    "url": "https://book.tstrs.me/search",
+    "description": "来自硬核指南导航网站",
+    "category": "learning",
+    "tags": [
+      "导航网站",
+      "硬核指南"
+    ],
+    "rating": 4,
+    "language": "中文",
+    "verified": false
+  },
+  {
+    "name": "Books.Fishhawk.Top",
+    "url": "https://books.fishhawk.top",
+    "description": "来自硬核指南导航网站",
+    "category": "learning",
+    "tags": [
+      "导航网站",
+      "硬核指南"
+    ],
+    "rating": 4,
+    "language": "中文",
+    "verified": false
+  },
+  {
+    "name": "Sobooks.Cc",
+    "url": "https://sobooks.cc",
+    "description": "来自硬核指南导航网站",
+    "category": "learning",
+    "tags": [
+      "导航网站",
+      "硬核指南"
+    ],
+    "rating": 4,
+    "language": "中文",
+    "verified": false
+  },
+  {
+    "name": "Wuxianbook.Com",
+    "url": "https://wuxianbook.com",
+    "description": "来自硬核指南导航网站",
+    "category": "learning",
+    "tags": [
+      "导航网站",
+      "硬核指南"
+    ],
+    "rating": 4,
+    "language": "中文",
+    "verified": false
+  }
+]
