@@ -1,0 +1,102 @@
+<!DOCTYPE html>
+<html lang="zh-CN" data-theme="dark">
+<head>
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width,initial-scale=1.0"/>
+<title>Flux · 导航中心</title>
+<link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 40 40'><defs><linearGradient id='g' x1='0%25' y1='0%25' x2='100%25' y2='100%25'><stop offset='0%25' stop-color='%236366f1'/><stop offset='100%25' stop-color='%238b5cf6'/></linearGradient></defs><rect width='40' height='40' rx='11' fill='url(%23g)'/><rect x='9' y='9' width='9' height='9' rx='2' fill='white' opacity='.95'/><rect x='22' y='9' width='9' height='9' rx='2' fill='white' opacity='.7'/><rect x='9' y='22' width='9' height='9' rx='2' fill='white' opacity='.7'/><rect x='22' y='22' width='9' height='9' rx='2' fill='%23f472b6'/><circle cx='30' cy='10' r='2.5' fill='%23facc15'/></svg>">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&family=JetBrains+Mono:wght@400;600&display=swap" rel="stylesheet">
+<script>
+(function(){
+  var s=localStorage.getItem('navhub-theme');
+  if(s)document.documentElement.setAttribute('data-theme',s);
+  else if(window.matchMedia('(prefers-color-scheme:light)').matches)document.documentElement.setAttribute('data-theme','light');
+})();
+</script>
+<link rel="stylesheet" href="style.css">
+</head>
+<body>
+<div class="bg" aria-hidden="true"></div>
+<div class="shell">
+<aside class="sidebar">
+  <div class="logo">
+    <div class="logo-icon">
+      <svg width="22" height="22" viewBox="0 0 24 24" fill="none">
+        <rect x="3" y="3" width="8" height="8" rx="2" fill="white" fill-opacity="0.95"/>
+        <rect x="13" y="3" width="8" height="8" rx="2" fill="white" fill-opacity="0.7"/>
+        <rect x="3" y="13" width="8" height="8" rx="2" fill="white" fill-opacity="0.7"/>
+        <rect x="13" y="13" width="8" height="8" rx="2" fill="#f472b6"/>
+        <circle cx="18" cy="6" r="2" fill="#facc15"/>
+      </svg>
+    </div>
+    <div class="logo-wordmark">
+      <div class="logo-title">Flux</div>
+      <div class="logo-ver">NAVIGATION · v4</div>
+    </div>
+  </div>
+  <nav class="nav-wrap" id="navWrap"></nav>
+  <div class="sidebar-foot">
+    <button class="sfoot-btn" id="themeBtn" onclick="toggleTheme()"><span>🌙</span><span>主题</span></button>
+    <button class="sfoot-btn" onclick="toggleEditor()"><span>⚙️</span><span>管理</span></button>
+  </div>
+</aside>
+<div class="main">
+  <div class="topbar">
+    <div class="search-wrap">
+      <span class="search-ico">🔍</span>
+      <input id="searchInput" type="text" placeholder="搜索名称、描述、标签或网址…" oninput="doSearch(this.value)">
+    </div>
+    <div class="view-toggle">
+      <button class="view-btn active" id="vgrid" onclick="setView('grid')">⊞ 网格</button>
+      <button class="view-btn" id="vlist" onclick="setView('list')">☰ 列表</button>
+    </div>
+  </div>
+  <button class="btt" id="btt" onclick="window.scrollTo({top:0,behavior:'smooth'})">↑</button>
+  <div class="stats-bar">
+    <div class="stat"><span class="stat-n" id="totalNum">—</span><span class="stat-l">收录站点</span></div>
+    <div class="stat"><span class="stat-n">13</span><span class="stat-l">分类</span></div>
+    <div class="stat"><span class="stat-n" id="favCount">0</span><span class="stat-l">已收藏</span></div>
+  </div>
+  <div class="content" id="content"></div>
+</div>
+</div>
+<div class="editor-modal" id="editorModal">
+  <div class="editor-box">
+    <div class="editor-header">
+      <span class="editor-title">⚙️ 站点管理</span>
+      <button class="editor-close" onclick="toggleEditor()">✕</button>
+    </div>
+    <div class="editor-body">
+      <div class="editor-row"><label>网站名称</label><input id="editName" placeholder="输入名称"></div>
+      <div class="editor-row"><label>网址 URL</label><input id="editUrl" placeholder="https://"></div>
+      <div class="editor-row"><label>分类</label><select id="editCat"></select></div>
+      <div class="editor-row"><label>描述</label><input id="editDesc" placeholder="简要描述"></div>
+      <div class="editor-row"><label>标签（逗号分隔）</label><input id="editTags" placeholder="标签1,标签2"></div>
+      <div class="editor-row"><label>徽章</label>
+        <select id="editBadge">
+          <option value="">无</option><option value="hot">HOT</option><option value="new">NEW</option>
+          <option value="free">FREE</option><option value="cn">中文</option><option value="open">开源</option>
+        </select>
+      </div>
+      <div class="editor-actions">
+        <button class="editor-btn secondary" onclick="addSite()">➕ 添加</button>
+        <button class="editor-btn primary" onclick="saveSite()">💾 保存</button>
+        <button class="editor-btn danger" onclick="deleteSite()">🗑 删除</button>
+      </div>
+      <div class="ie-block">
+        <div class="editor-label">📦 数据管理</div>
+        <div class="ie-btns">
+          <button class="editor-btn secondary" onclick="exportData()" style="flex:1">⬇️ 导出 JSON</button>
+          <button class="editor-btn secondary" onclick="document.getElementById('importFile').click()" style="flex:1">⬆️ 导入 JSON</button>
+        </div>
+        <input type="file" id="importFile" accept=".json" style="display:none" onchange="importData(this)">
+      </div>
+    </div>
+  </div>
+</div>
+<script src="data.js"></script>
+<script src="main.js"></script>
+</body>
+</html>

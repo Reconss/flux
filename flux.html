@@ -1,0 +1,435 @@
+<!DOCTYPE html>
+<html lang="zh-CN" data-theme="dark">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1.0">
+<title>Flux · 导航中心</title>
+<link rel="icon" href="data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHZpZXdCb3g9IjAgMCA0MCA0MCIgZmlsbD0ibm9uZSI+PGRlZnM+PGxpbmVhckdyYWRpZW50IGlkPSJncmFkIiB4MT0iMCIgeTE9IjAiIHgyPSI0MCIgeTI9IjQwIj48c3RvcCBvZmZzZXQ9IjAlIiBzdG9wLWNvbG9yPSIjNjM2NmYxIi8+PHN0b3Agb2Zmc2V0PSIxMDAlIiBzdG9wLWNvbG9yPSIjZWM0ODk5Ii8+PC9saW5lYXJHcmFkaWVudD48L2RlZnM+PHJlY3Qgd2lkdGg9IjQwIiBoZWlnaHQ9IjQwIiByeD0iMTIiIGZpbGw9InVybCgjZ3JhZCkiLz48cGF0aCBkPSJNMjAgOEwzMCAyOEwyMCAyMkwxMCAyOEwyMCA4WiIgZmlsbD0id2hpdGUiIHN0cm9rZT0id2hpdGUiIHN0cm9rZS13aWR0aD0iMS41IiBzdHJva2UtbGluZWpvaW49InJvdW5kIi8+PGNpcmNsZSBjeD0iMjAiIGN5PSIzMiIgcj0iMi41IiBmaWxsPSJ3aGl0ZSIvPjwvc3ZnPg==">
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+<style>
+:root{--a1:#6366f1;--a1-soft:rgba(99,102,241,.12);--a1-glow:rgba(99,102,241,.25);--a2:#8b5cf6;--a3:#34d399;--a4:#fb923c;--a5:#f472b6;--a6:#38bdf8;--a7:#facc15;--bg:#0c0e14;--surface:#13151d;--surface2:#1a1d27;--surface3:#22263a;--border:rgba(255,255,255,.065);--border-h:rgba(255,255,255,.13);--text:#e6e8f0;--text-m:#737898;--text-d:#383d57;--shadow:0 8px 32px rgba(0,0,0,.5);--shadow-sm:0 2px 8px rgba(0,0,0,.3)}
+[data-theme="light"]{--bg:#f6f7fb;--surface:#fff;--surface2:#f0f1f8;--surface3:#e7e9f4;--border:rgba(60,65,120,.08);--border-h:rgba(60,65,120,.15);--text:#1c1e30;--text-m:#5c6080;--text-d:#adb2cc}
+*{margin:0;padding:0;box-sizing:border-box}
+body{font-family:'Inter',-apple-system,sans-serif;background:var(--bg);color:var(--text);min-height:100vh;line-height:1.55;-webkit-font-smoothing:antialiased;transition:background .3s,color .3s}
+::-webkit-scrollbar{width:5px}::-webkit-scrollbar-thumb{background:var(--border-h);border-radius:3px}
+.bg{position:fixed;inset:0;overflow:hidden;pointer-events:none;z-index:0}
+.bg::before{content:'';position:absolute;inset:0;background:radial-gradient(ellipse 80% 60% at 10% 10%, rgba(99,102,241,.12) 0%, transparent 60%),radial-gradient(ellipse 60% 50% at 90% 50%, rgba(139,92,246,.08) 0%, transparent 55%),radial-gradient(ellipse 70% 50% at 50% 90%, rgba(52,211,153,.05) 0%, transparent 50%)}
+.shell{display:flex;min-height:100vh;position:relative;z-index:1}
+.sidebar{width:232px;height:100vh;position:fixed;left:0;top:0;background:var(--surface);border-right:1px solid var(--border);display:flex;flex-direction:column;transition:background .3s}
+.logo{padding:18px 16px;border-bottom:1px solid var(--border);display:flex;align-items:center;gap:12px}
+.logo-icon{width:42px;height:42px;background:linear-gradient(135deg,var(--a1),var(--a2));border-radius:11px;display:flex;align-items:center;justify-content:center;box-shadow:0 3px 14px var(--a1-glow);position:relative;overflow:hidden}
+.logo-icon::before{content:'';position:absolute;inset:0;background:linear-gradient(135deg,rgba(255,255,255,.22),transparent 55%)}
+.logo-icon svg{width:22px;height:22px;position:relative;z-index:1}
+.logo-title{font-size:16px;font-weight:800;letter-spacing:-.5px;color:var(--text)}
+.logo-ver{font-size:9px;color:var(--text-d);margin-top:2px}
+.nav-wrap{flex:1;padding:10px 8px;overflow-y:auto}
+.nav-group-label{font-size:9.5px;font-weight:700;letter-spacing:.14em;text-transform:uppercase;color:var(--text-d);padding:0 10px;margin:14px 0 4px}
+.nav-item{display:flex;align-items:center;gap:9px;padding:8px 10px;margin-bottom:2px;border-radius:9px;cursor:pointer;color:var(--text-m);font-size:12.5px;transition:all .14s;border:none;background:none;width:100%;text-align:left}
+.nav-item:hover{background:var(--surface2);color:var(--text)}
+.nav-item.active{background:var(--a1-soft);color:var(--a1);font-weight:600;box-shadow:inset 2px 0 0 var(--a1)}
+.nav-icon{font-size:14px;width:20px;text-align:center}
+.nav-count{margin-left:auto;font-size:9px;color:var(--text-d);background:var(--surface3);padding:1px 6px;border-radius:4px}
+.nav-item.active .nav-count{background:rgba(99,102,241,.16);color:var(--a1)}
+.sidebar-foot{padding:10px 8px;border-top:1px solid var(--border);display:flex;gap:4px}
+.sfoot-btn{flex:1;display:flex;align-items:center;justify-content:center;gap:5px;padding:9px;border-radius:9px;border:none;background:none;color:var(--text-m);font-size:11px;transition:all .14s}
+.sfoot-btn:hover{background:var(--surface2);color:var(--text)}
+.main{flex:1;margin-left:232px}
+.topbar{position:sticky;top:0;z-index:100;background:rgba(12,14,20,.88);backdrop-filter:blur(20px);border-bottom:1px solid var(--border);padding:12px 26px;display:flex;align-items:center;gap:14px}
+[data-theme="light"] .topbar{background:rgba(246,247,251,.93)}
+.search-wrap{flex:1;max-width:500px;display:flex;align-items:center;gap:10px;background:var(--surface);border:1px solid var(--border);border-radius:11px;padding:0 14px;transition:border-color .2s,box-shadow .2s}
+.search-wrap:focus-within{border-color:var(--a1);box-shadow:0 0 0 3px var(--a1-soft)}
+.search-wrap input{flex:1;padding:10px 0;font-size:13px;background:none;border:none;outline:none;color:var(--text)}
+.search-wrap input::placeholder{color:var(--text-d)}
+.view-toggle{display:flex;gap:4px}
+.view-btn{padding:8px 13px;font-size:12px;background:var(--surface);border:1px solid var(--border);border-radius:8px;color:var(--text-m);transition:all .15s}
+.view-btn:hover{background:var(--surface2);color:var(--text)}
+.view-btn.active{background:var(--a1-soft);border-color:var(--a1);color:var(--a1)}
+.stats-bar{display:flex;align-items:center;gap:28px;padding:20px 26px;border-bottom:1px solid var(--border)}
+.stat{display:flex;align-items:baseline;gap:5px}
+.stat-n{font-size:22px;font-weight:700;color:var(--a1)}
+.stat-l{font-size:12px;color:var(--text-m)}
+.content{padding:24px 26px}
+.section{margin-bottom:30px}
+.sec-hd{display:flex;align-items:center;gap:10px;margin-bottom:14px;padding-bottom:10px;border-bottom:1px solid var(--border)}
+.sec-dot{width:8px;height:8px;border-radius:50%;background:var(--a1)}
+.sec-title{font-size:14px;font-weight:600}
+.sec-count{margin-left:auto;font-size:12px;color:var(--text-m)}
+.cards{display:grid;grid-template-columns:repeat(auto-fill,minmax(230px,1fr));gap:10px}
+.cards.list-view{grid-template-columns:1fr}
+.card{background:var(--surface);border:1px solid var(--border);border-radius:12px;padding:13px;display:flex;flex-direction:column;gap:8px;text-decoration:none;color:inherit;transition:all .2s;position:relative}
+.card:hover{background:var(--surface2);border-color:var(--border-h);transform:translateY(-2px);box-shadow:var(--shadow-sm)}
+.card-top{display:flex;gap:11px;align-items:flex-start}
+.card-ico{width:38px;height:38px;flex-shrink:0;border-radius:10px;background:var(--surface3);display:flex;align-items:center;justify-content:center;font-size:18px;font-weight:700;color:var(--a1);overflow:hidden}
+.card-ico img{width:100%;height:100%;object-fit:cover;border-radius:inherit}
+.card-meta{flex:1;min-width:0}
+.card-name{font-size:13px;font-weight:600;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.card-host{font-size:11px;color:var(--text-d);margin-top:1px}
+.card-tags-row{display:flex;flex-wrap:wrap;gap:3px;margin-top:5px}
+.ctag{font-size:9px;padding:2px 5px;background:var(--surface3);color:var(--text-m);border-radius:4px}
+.card-badge{position:absolute;top:10px;right:10px;font-size:9px;font-weight:700;padding:3px 6px;border-radius:5px;background:var(--a1);color:#fff}
+.fav-btn{position:absolute;top:10px;right:10px;background:none;border:none;font-size:14px;color:var(--text-d);cursor:pointer;opacity:0;transition:opacity .15s}
+.card:hover .fav-btn{opacity:1}
+.fav-btn.active{opacity:1;color:var(--a7)}
+.card-desc{font-size:11.5px;color:var(--text-m);line-height:1.5}
+.empty{text-align:center;padding:48px 20px;color:var(--text-m);font-size:13px}
+.btt{position:fixed;bottom:24px;right:24px;width:42px;height:42px;background:var(--surface);border:1px solid var(--border);border-radius:12px;color:var(--text-m);font-size:18px;cursor:pointer;opacity:0;transition:all .2s;z-index:90}
+.btt.show{opacity:1}
+.btt:hover{background:var(--surface2);color:var(--text)}
+.editor-modal{position:fixed;inset:0;z-index:500;background:rgba(0,0,0,.6);display:none;align-items:center;justify-content:center;backdrop-filter:blur(8px)}
+.editor-modal.open{display:flex}
+.editor-box{width:90%;max-width:480px;max-height:90vh;overflow-y:auto;background:var(--surface);border:1px solid var(--border);border-radius:16px;box-shadow:var(--shadow);animation:modalIn .25s ease}
+@keyframes modalIn{from{opacity:0;transform:scale(.96) translateY(10px)}to{opacity:1;transform:scale(1) translateY(0)}}
+.editor-header{display:flex;align-items:center;justify-content:space-between;padding:16px 20px;border-bottom:1px solid var(--border)}
+.editor-title{font-size:15px;font-weight:600}
+.editor-close{width:30px;height:30px;display:flex;align-items:center;justify-content:center;background:var(--surface2);border:none;border-radius:8px;color:var(--text-m);font-size:14px}
+.editor-close:hover{background:var(--surface3);color:var(--text)}
+.editor-body{padding:18px 20px}
+.editor-row{margin-bottom:12px}
+.editor-row label,.editor-label{display:block;font-size:12px;color:var(--text-m);margin-bottom:5px;font-weight:500}
+.editor-row input,.editor-row select{width:100%;padding:9px 12px;font-size:13px;background:var(--surface2);border:1px solid var(--border);border-radius:8px;color:var(--text);outline:none;transition:border-color .2s}
+.editor-row input:focus,.editor-row select:focus{border-color:var(--a1);box-shadow:0 0 0 3px var(--a1-soft)}
+.editor-actions{display:flex;gap:8px;margin-top:18px}
+.editor-btn{flex:1;padding:9px;font-size:12px;font-weight:500;border-radius:9px;border:none;transition:all .15s;background:var(--surface2);color:var(--text)}
+.editor-btn:hover{background:var(--surface3)}
+.editor-btn.primary{background:var(--a1);color:#fff}
+.editor-btn.primary:hover{background:var(--a2)}
+.editor-btn.danger{background:rgba(248,113,113,.15);color:#F87171}
+.ie-block{margin-top:18px;padding-top:14px;border-top:1px solid var(--border)}
+.ie-btns{display:flex;gap:8px}
+@media(max-width:900px){.sidebar{width:68px}.logo-wordmark,.nav-item span:not(.nav-icon),.nav-count,.sfoot-btn span:last-child{display:none}.nav-item{justify-content:center;padding:12px}.main{margin-left:68px}.logo{padding:16px 12px;justify-content:center}.logo-icon{margin:0}}
+@media(max-width:600px){.sidebar{display:none}.main{margin-left:0}.topbar{padding:10px 14px}.content{padding:14px}.cards{grid-template-columns:repeat(auto-fill,minmax(150px,1fr));gap:8px}.stats-bar{padding:14px;gap:20px}}
+@media(prefers-reduced-motion:reduce){*,*::before,*::after{animation-duration:.01ms!important;transition-duration:.01ms!important}}
+</style>
+</head>
+<body>
+<div class="bg"></div>
+<div class="shell">
+<aside class="sidebar">
+<div class="logo"><div class="logo-icon"><svg viewBox="0 0 40 40" fill="none"><defs><linearGradient id="g" x1="0" y1="0" x2="40" y2="40"><stop offset="0" stop-color="#6366f1"/><stop offset="1" stop-color="#ec4899"/></linearGradient></defs><rect width="40" height="40" rx="12" fill="url(#g)"/><path d="M20 8L30 28L20 22L10 28L20 8Z" fill="white" stroke="white" stroke-width="1.5" stroke-linejoin="round"/><circle cx="20" cy="32" r="2.5" fill="white"/></svg></div><div class="logo-wordmark"><div class="logo-title">Flux</div><div class="logo-ver">NAVIGATION · v4</div></div></div>
+<nav class="nav-wrap" id="navWrap"></nav>
+<div class="sidebar-foot"><button class="sfoot-btn" id="themeBtn" onclick="toggleTheme()"><span>🌙</span><span>主题</span></button><button class="sfoot-btn" onclick="toggleEditor()"><span>⚙️</span><span>管理</span></button></div>
+</aside>
+<div class="main">
+<div class="topbar"><div class="search-wrap"><span>🔍</span><input id="searchInput" type="text" placeholder="搜索名称、描述、标签或网址…" oninput="doSearch(this.value)"></div><div class="view-toggle"><button class="view-btn active" id="vgrid" onclick="setView('grid')">⊞ 网格</button><button class="view-btn" id="vlist" onclick="setView('list')">☰ 列表</button></div></div>
+<button class="btt" id="btt" onclick="window.scrollTo({top:0,behavior:'smooth'})">↑</button>
+<div class="stats-bar"><div class="stat"><span class="stat-n" id="totalNum">—</span><span class="stat-l">收录站点</span></div><div class="stat"><span class="stat-n">13</span><span class="stat-l">分类</span></div><div class="stat"><span class="stat-n" id="favCount">0</span><span class="stat-l">已收藏</span></div></div>
+<div class="content" id="content"></div>
+</div>
+</div>
+<div class="editor-modal" id="editorModal"><div class="editor-box"><div class="editor-header"><span class="editor-title">⚙️ 站点管理</span><button class="editor-close" onclick="toggleEditor()">✕</button></div><div class="editor-body"><div class="editor-row"><label>网站名称</label><input id="editName" placeholder="输入名称"></div><div class="editor-row"><label>网址 URL</label><input id="editUrl" placeholder="https://"></div><div class="editor-row"><label>分类</label><select id="editCat"></select></div><div class="editor-row"><label>描述</label><input id="editDesc" placeholder="简要描述"></div><div class="editor-row"><label>标签（逗号分隔）</label><input id="editTags" placeholder="标签1,标签2"></div><div class="editor-row"><label>徽章</label><select id="editBadge"><option value="">无</option><option value="hot">HOT</option><option value="new">NEW</option><option value="free">FREE</option><option value="cn">中文</option><option value="open">开源</option></select></div><div class="editor-actions"><button class="editor-btn" onclick="addSite()">➕ 添加</button><button class="editor-btn primary" onclick="saveSite()">💾 保存</button><button class="editor-btn danger" onclick="deleteSite()">🗑 删除</button></div><div class="ie-block"><div class="editor-label">📦 数据管理</div><div class="ie-btns"><button class="editor-btn" onclick="exportData()" style="flex:1">⬇️ 导出</button><button class="editor-btn" onclick="document.getElementById('importFile').click()" style="flex:1">⬆️ 导入</button></div><input type="file" id="importFile" accept=".json" style="display:none" onchange="importData(this)"></div></div></div></div>
+<script>
+const SITES=[
+// ── AI ──────────────────────────────────────────────────
+{cat:'ai',name:'ChatGPT',url:'https://chat.openai.com',desc:'OpenAI 出品，GPT-4o 驱动，写作/编程/分析全能。',badge:'hot',tags:['对话AI']},
+{cat:'ai',name:'Claude',url:'https://claude.ai',desc:'Anthropic 出品，逻辑严谨，擅长长文与文件分析。',badge:'hot',tags:['对话AI']},
+{cat:'ai',name:'Gemini',url:'https://gemini.google.com',desc:'Google 多模态 AI，深度整合搜索与 Workspace 生态。',tags:['对话AI']},
+{cat:'ai',name:'Perplexity',url:'https://www.perplexity.ai',desc:'AI 搜索引擎，实时联网并附来源引用。',badge:'new',tags:['AI搜索']},
+{cat:'ai',name:'豆包',url:'https://www.doubao.com/chat/',desc:'字节跳动出品的 AI 对话助手，中文体验优秀。',badge:'cn',tags:['对话AI']},
+{cat:'ai',name:'Midjourney',url:'https://www.midjourney.com',desc:'顶级 AI 图像生成，艺术风格出众，支持 Web 端。',tags:['AI绘图']},
+{cat:'ai',name:'Suno',url:'https://suno.com',desc:'AI 音乐生成，输入描述即可生成完整歌曲。',badge:'new',tags:['AI创作']},
+{cat:'ai',name:'Runway',url:'https://runwayml.com',desc:'AI 视频生成与编辑平台，Gen-3 支持文字/图片转视频。',tags:['AI创作']},
+{cat:'ai',name:'Hugging Face',url:'https://huggingface.co',desc:'机器学习模型与数据集托管平台，开源 AI 核心社区。',tags:['开发平台']},
+{cat:'ai',name:'OpenAI Platform',url:'https://platform.openai.com',desc:'OpenAI API 控制台，接入 GPT-4o 等模型构建应用。',tags:['开发平台']},
+{cat:'ai',name:'Google AI Studio',url:'https://aistudio.google.com',desc:'Google Gemini API 调试与原型工具，免费额度高。',tags:['开发平台']},
+{cat:'ai',name:'Claude API',url:'https://console.anthropic.com',desc:'Anthropic API 控制台，Claude 模型测试与调用。',tags:['开发平台']},
+{cat:'ai',name:'Papers with Code',url:'https://paperswithcode.com',desc:'最新 AI 论文与开源代码一站式查阅。',tags:['研究资源']},
+{cat:'ai',name:'ML Mastery',url:'https://machinelearningmastery.com',desc:'ML 实战教程网站，从入门到进阶学习。',tags:['研究资源']},
+
+// ── DEV ─────────────────────────────────────────────────
+{cat:'dev',name:'GitHub',url:'https://github.com',desc:'全球最大代码托管与开源协作平台，Copilot AI 辅助编程。',tags:['代码托管']},
+{cat:'dev',name:'GitLab',url:'https://gitlab.com',desc:'企业级 DevOps 平台，支持私有部署与 CI/CD 流水线。',tags:['代码托管']},
+{cat:'dev',name:'Gitee 码云',url:'https://gitee.com',desc:'国内主流代码托管平台，速度快，对中文友好。',badge:'cn',tags:['代码托管']},
+{cat:'dev',name:'Stack Overflow',url:'https://stackoverflow.com',desc:'程序员问答社区，几乎所有技术问题都有解答。',tags:['社区问答']},
+{cat:'dev',name:'掘金',url:'https://juejin.cn',desc:'面向开发者的技术社区，前端/后端/AI 内容丰富。',badge:'cn',tags:['社区问答']},
+{cat:'dev',name:'MDN Web Docs',url:'https://developer.mozilla.org',desc:'HTML/CSS/JS 权威参考文档，前端必备手册。',tags:['文档参考']},
+{cat:'dev',name:'菜鸟教程',url:'https://runoob.com',desc:'全中文编程入门教程，覆盖几乎所有主流语言。',badge:'cn',tags:['学习教程']},
+{cat:'dev',name:'极客时间',url:'https://jikeshijian.cn',desc:'付费技术专栏平台，大厂工程师出品，质量高。',badge:'cn',tags:['学习教程']},
+{cat:'dev',name:'Vercel',url:'https://vercel.com',desc:'前端云部署平台，Git 推送自动部署，Next.js 官方支持。',tags:['部署运维']},
+{cat:'dev',name:'Cloudflare',url:'https://www.cloudflare.com',desc:'CDN、DNS、安全与边缘计算平台，免费套餐极具价值。',tags:['部署运维']},
+{cat:'dev',name:'CodePen',url:'https://codepen.io',desc:'在线 HTML/CSS/JS 编辑器，前端灵感分享社区。',badge:'free',tags:['在线工具']},
+{cat:'dev',name:'JSON 格式化',url:'https://www.json.cn',desc:'在线 JSON 格式化、压缩、校验工具。',badge:'free',tags:['在线工具']},
+{cat:'dev',name:'在线 GDB',url:'https://www.onlinegdb.com',desc:'多语言在线代码编辑与运行调试环境。',badge:'free',tags:['在线工具']},
+{cat:'dev',name:'roadmap.sh',url:'https://roadmap.sh',desc:'前端/后端/DevOps 等方向可视化学习路线图。',badge:'free',tags:['学习教程']},
+{cat:'dev',name:'OSCHINA',url:'https://www.oschina.net',desc:'中文开源社区，发现国内开源项目与资讯。',badge:'cn',tags:['社区问答']},
+{cat:'dev',name:'npm',url:'https://www.npmjs.com',desc:'Node.js 包管理中心，搜索查询 200 万+ JS 包。',tags:['文档参考']},
+
+// ── EDUCATION ───────────────────────────────────────────
+{cat:'edu',name:'中国大学MOOC',url:'https://www.icourse163.org',desc:'顶尖高校精品课程在线平台，国家级认证证书。',badge:'cn',tags:['在线课程']},
+{cat:'edu',name:'Coursera',url:'https://www.coursera.org',desc:'与全球顶尖大学合作的国际在线课程，部分可免费审计。',tags:['在线课程']},
+{cat:'edu',name:'edX',url:'https://www.edx.org',desc:'MIT、哈佛等名校开放课程，提供认证证书。',tags:['在线课程']},
+{cat:'edu',name:'Khan Academy',url:'https://www.khanacademy.org',desc:'免费优质基础学科辅导，从小学到大学全覆盖。',badge:'free',tags:['在线课程']},
+{cat:'edu',name:'freeCodeCamp',url:'https://www.freecodecamp.org',desc:'免费学编程，Web/Python/数据科学课程完整体系。',badge:'free',tags:['在线课程']},
+{cat:'edu',name:'LeetCode',url:'https://leetcode.com',desc:'算法与数据结构刷题平台，面试备考必备。',tags:['刷题练习']},
+{cat:'edu',name:'谷歌学术',url:'https://scholar.google.com',desc:'学术论文搜索引擎，覆盖各学科顶刊文献。',tags:['学术研究']},
+{cat:'edu',name:'百度学术',url:'https://xueshu.baidu.com',desc:'中文学术搜索，收录大量中文期刊与论文。',badge:'cn',tags:['学术研究']},
+{cat:'edu',name:'知乎',url:'https://www.zhihu.com',desc:'中文知识问答社区，高质量专业内容聚集地。',badge:'cn',tags:['知识问答']},
+{cat:'edu',name:'维基百科',url:'https://zh.wikipedia.org',desc:'全球最大开放百科全书，中文版持续更新。',badge:'free',tags:['知识问答']},
+{cat:'edu',name:'DeepL',url:'https://www.deepl.com/zh/translator',desc:'精度最高的 AI 翻译服务，支持多种语言对。',tags:['语言工具']},
+{cat:'edu',name:'有道词典',url:'https://dict.youdao.com',desc:'网易出品专业词典，支持例句、发音与专业词汇。',badge:'cn',tags:['语言工具']},
+{cat:'edu',name:'英语流利说',url:'https://liulishuo.com',desc:'AI 口语教练，自适应训练提升英语口语。',badge:'cn',tags:['语言工具']},
+{cat:'edu',name:'谷歌翻译',url:'https://translate.google.cn',desc:'Google 翻译国内镜像，覆盖 100+ 语言。',badge:'free',tags:['语言工具']},
+
+// ── TOOLS ───────────────────────────────────────────────
+{cat:'tools',name:'Notion',url:'https://www.notion.so',desc:'全能型笔记与协作工具，支持数据库、看板，AI 写作。',tags:['效率协作']},
+{cat:'tools',name:'Obsidian',url:'https://obsidian.md',desc:'本地优先知识管理，双向链接图谱，强大插件生态。',badge:'free',tags:['效率协作']},
+{cat:'tools',name:'Excalidraw',url:'https://excalidraw.com',desc:'手绘风格白板，实时协作，适合架构图与头脑风暴。',badge:'free',tags:['效率协作']},
+{cat:'tools',name:'Ray.so',url:'https://ray.so',desc:'将代码片段生成精美截图，分享代码必备工具。',badge:'free',tags:['效率协作']},
+{cat:'tools',name:'Flowith',url:'https://flowith.io/',desc:'AI 驱动的流式思维导图与写作工具。',badge:'new',tags:['效率协作']},
+{cat:'tools',name:'Paperpal',url:'https://paperpal.cn/',desc:'AI 学术论文写作辅助，润色检查一体化。',tags:['效率协作']},
+{cat:'tools',name:'Unsplash',url:'https://unsplash.com',desc:'百万张高清摄影图免费商用，无需授权。',badge:'free',tags:['图片素材']},
+{cat:'tools',name:'Pexels',url:'https://pexels.com',desc:'免费企业级高清图片与视频，商用授权友好。',badge:'free',tags:['图片素材']},
+{cat:'tools',name:'Pixabay',url:'https://pixabay.com',desc:'免费图片、插画、视频素材库，覆盖面广。',badge:'free',tags:['图片素材']},
+{cat:'tools',name:'彼岸壁纸',url:'http://www.netbian.com',desc:'国内老牌壁纸站，高清图片资源丰富。',badge:'cn',tags:['壁纸']},
+{cat:'tools',name:'Wallhere',url:'https://wallhere.com',desc:'高质量壁纸收藏分享站，风格多样。',badge:'free',tags:['壁纸']},
+{cat:'tools',name:'WallpapersCraft',url:'https://wallpaperscraft.com',desc:'精美高清壁纸免费下载，支持多种分辨率。',badge:'free',tags:['壁纸']},
+{cat:'tools',name:'HDQwalls',url:'https://hdqwalls.com',desc:'4K 超清壁纸下载，游戏/电影/自然主题丰富。',badge:'free',tags:['壁纸']},
+{cat:'tools',name:'2DWallpapers',url:'https://www.2dwallpapers.com',desc:'动漫/二次元风格壁纸专属下载站。',badge:'free',tags:['壁纸']},
+{cat:'tools',name:'ZOL壁纸',url:'https://desk.zol.com.cn',desc:'中关村在线旗下壁纸站，PC/手机壁纸海量收录。',badge:'cn',tags:['壁纸']},
+{cat:'tools',name:'好壁纸',url:'https://haowallpaper.com',desc:'精选好看高清壁纸，风景/人像/动漫全覆盖。',badge:'cn',tags:['壁纸']},
+{cat:'tools',name:'Dribbble',url:'https://dribbble.com',desc:'顶级 UI/UX 设计师作品展示社区与招募平台。',tags:['设计资源']},
+{cat:'tools',name:'站酷',url:'https://www.zcool.com.cn',desc:'国内最大设计师社区，作品展示与素材下载。',badge:'cn',tags:['设计资源']},
+{cat:'tools',name:'Figma',url:'https://www.figma.com',desc:'协作式 UI/UX 设计工具，实时多人编辑，行业标准。',tags:['设计资源']},
+{cat:'tools',name:'Coolors',url:'https://coolors.co',desc:'快速生成配色方案，支持锁定颜色继续生成。',badge:'free',tags:['设计资源']},
+{cat:'tools',name:'Google Fonts',url:'https://fonts.google.com',desc:'1500+ 开源字体库，免费商用，CDN 直接引用。',badge:'free',tags:['设计资源']},
+{cat:'tools',name:'Spline',url:'https://spline.design',desc:'浏览器端 3D 设计工具，可导出可交互 3D 网页组件。',badge:'new',tags:['设计资源']},
+{cat:'tools',name:'Remove.bg',url:'https://www.remove.bg',desc:'AI 一键抠图，自动去除图片背景，精度极高。',tags:['图片处理']},
+{cat:'tools',name:'Squoosh',url:'https://squoosh.app',desc:'Google 出品在线图片压缩，支持 WebP 等多格式。',badge:'free',tags:['图片处理']},
+{cat:'tools',name:'TinyPNG',url:'https://tinify.cn',desc:'PNG/JPG 在线智能压缩，图质量几乎无损。',badge:'free',tags:['图片处理']},
+{cat:'tools',name:'Bigjpg',url:'https://bigjpg.com',desc:'AI 超分辨率图片放大，无损扩大图片尺寸。',badge:'free',tags:['图片处理']},
+{cat:'tools',name:'FrameGrab',url:'https://framegrab.cc/zh',desc:'从视频中精准截取高清帧图片。',badge:'free',tags:['图片处理']},
+{cat:'tools',name:'Convertio',url:'https://convertio.co/zh',desc:'在线文件格式转换，支持 300+ 种格式。',tags:['文件转换']},
+{cat:'tools',name:'Smallpdf',url:'https://smallpdf.com/cn#r=app',desc:'PDF 工具集合：合并、拆分、压缩、转换一站搞定。',tags:['文件转换']},
+{cat:'tools',name:'PDF24',url:'https://tools.pdf24.org/zh/all-tools',desc:'全套 PDF 工具，免费无水印，支持本地处理。',badge:'free',tags:['文件转换']},
+{cat:'tools',name:'Look Scanned',url:'https://lookscanned.io/scan',desc:'让 PDF 看起来像扫描件，隐私安全本地处理。',badge:'free',tags:['文件转换']},
+{cat:'tools',name:'临时邮箱',url:'https://temp-mail.io/zh',desc:'一次性临时邮箱，保护隐私、防止垃圾邮件。',badge:'free',tags:['隐私安全']},
+{cat:'tools',name:'Bitwarden',url:'https://bitwarden.com',desc:'开源密码管理器，端对端加密，支持全平台同步。',badge:'free',tags:['隐私安全']},
+{cat:'tools',name:'AirPortal',url:'https://www.airportal.cn',desc:'极简文件传输，无需登录，局域网与公网均可。',badge:'free',tags:['文件传输']},
+{cat:'tools',name:'WormHole',url:'https://wormhole.app',desc:'加密临时文件传输，最大 5GB，链接自动过期。',badge:'free',tags:['文件传输']},
+{cat:'tools',name:'EasyChuan',url:'https://easychuan.cn',desc:'简洁易用的局域网文件传输工具，无需安装。',badge:'free',tags:['文件传输']},
+{cat:'tools',name:'IP 查询',url:'https://whois.pconline.com.cn',desc:'查询本机或任意 IP 的地理位置与运营商信息。',badge:'free',tags:['网络工具']},
+
+// ── READING ─────────────────────────────────────────────
+{cat:'read',name:'Project Gutenberg',url:'https://www.gutenberg.org',desc:'60,000+ 免费公版电子书，可合法下载使用。',badge:'free',tags:['电子书']},
+{cat:'read',name:'Z-Library',url:'https://z-lib.org',desc:'全球最大电子书图书馆，覆盖数百万本书籍。',tags:['电子书']},
+{cat:'read',name:'LibGen',url:'https://libgen.lc',desc:'学术书籍与论文下载，科研工作者常用资源。',tags:['电子书']},
+{cat:'read',name:'SoBooks',url:'https://sobooks.cc',desc:'中文电子书免费下载，以文学与人文类为主。',badge:'free',tags:['电子书']},
+{cat:'read',name:'无限书',url:'https://wuxianbook.com',desc:'中文电子书资源站，小说/教材/人文类丰富。',badge:'free',tags:['电子书']},
+{cat:'read',name:'502Book',url:'https://502book.com',desc:'免费电子书下载，格式多样，覆盖面广。',badge:'free',tags:['电子书']},
+{cat:'read',name:'Open Library',url:'https://openlibrary.org',desc:'互联网档案馆旗下开放图书馆，可在线借阅。',badge:'free',tags:['电子书']},
+{cat:'read',name:'Google Books',url:'https://books.google.com',desc:'谷歌图书搜索，可预览部分书籍正文内容。',tags:['电子书']},
+{cat:'read',name:'AudiobookBay',url:'https://audiobookbay.lu',desc:'英文有声书下载站，资源海量免费。',badge:'free',tags:['有声书']},
+{cat:'read',name:'喜马拉雅',url:'https://www.ximalaya.com',desc:'国内最大音频内容平台，有声书/播客全覆盖。',badge:'cn',tags:['有声书']},
+{cat:'read',name:'MangaDex',url:'https://mangadex.org',desc:'最大在线漫画平台，多语言翻译版本。',tags:['漫画']},
+{cat:'read',name:'Komiic',url:'https://komiic.cc',desc:'高质量漫画在线阅读平台，更新及时。',badge:'free',tags:['漫画']},
+{cat:'read',name:'GodaMH',url:'https://godamh.com',desc:'免费漫画在线阅读，资源覆盖广。',badge:'free',tags:['漫画']},
+{cat:'read',name:'Webtoons',url:'https://webtoons.com',desc:'韩漫（Webtoon）官方平台，全球最大数字漫画。',tags:['漫画']},
+{cat:'read',name:'Wattpad',url:'https://www.wattpad.com',desc:'全球最大在线写作与阅读社区，网文平台。',tags:['小说']},
+{cat:'read',name:'Webnovel',url:'https://www.webnovel.com',desc:'起点国际版，中国网络小说英译平台。',tags:['小说']},
+{cat:'read',name:'Royal Road',url:'https://www.royalroad.com',desc:'英文网络小说社区，西方奇幻题材丰富。',badge:'free',tags:['小说']},
+{cat:'read',name:'Archive of Our Own',url:'https://archiveofourown.org',desc:'全球最大同人创作社区（AO3），覆盖各大 IP。',tags:['小说']},
+{cat:'read',name:'独者阁',url:'https://duzhege.cn',desc:'精品中文电子书分享社区，质量有保证。',badge:'free',tags:['小说']},
+{cat:'read',name:'Bangumi',url:'https://bangumi.tv',desc:'动画、漫画、游戏综合评分与收藏数据库，二次元圣地。',badge:'cn',tags:['动漫']},
+{cat:'read',name:'BGMList',url:'https://bgmlist.com',desc:'番剧放送列表，每季新番一览无余。',badge:'free',tags:['动漫']},
+{cat:'read',name:'FitACG',url:'https://fitacg.com',desc:'ACG 综合资源站，动漫/游戏/音乐全覆盖。',badge:'free',tags:['动漫']},
+
+// ── MEDIA ───────────────────────────────────────────────
+{cat:'media',name:'Bilibili',url:'https://www.bilibili.com',desc:'国内最大二次元视频平台，也是知识/科技内容聚集地。',badge:'cn',tags:['视频平台']},
+{cat:'media',name:'腾讯视频',url:'https://v.qq.com',desc:'国内领先长视频平台，覆盖影视剧与综艺。',badge:'cn',tags:['视频平台']},
+{cat:'media',name:'爱奇艺',url:'https://www.iqiyi.com',desc:'优质剧综会员视频平台，独播内容丰富。',badge:'cn',tags:['视频平台']},
+{cat:'media',name:'芒果TV',url:'https://www.mgtv.com',desc:'湖南卫视旗下综艺与剧集平台。',badge:'cn',tags:['视频平台']},
+{cat:'media',name:'Crunchyroll',url:'https://www.crunchyroll.com',desc:'全球最大正版动漫流媒体，海量日漫资源。',tags:['视频平台']},
+{cat:'media',name:'抖音',url:'https://www.douyin.com',desc:'字节跳动旗下短视频平台，兴趣内容推荐。',badge:'cn',tags:['视频平台']},
+{cat:'media',name:'云朵影视',url:'https://yunduoyingshi.com',desc:'影视剧高清在线观看，线路稳定清晰。',badge:'free',tags:['在线观看']},
+{cat:'media',name:'注视影视',url:'https://gaze.red',desc:'海外影视剧为主，国内高口碑剧集俱备的在线影视站。',badge:'free',tags:['在线观看']},
+{cat:'media',name:'No视频',url:'https://www.novipnoad.uk',desc:'主打海外影视剧资源，追剧体验轻松流畅。',badge:'free',tags:['在线观看']},
+{cat:'media',name:'剧OK',url:'https://juok3.top',desc:'可观看全网影视剧的在线追剧网站。',badge:'free',tags:['在线观看']},
+{cat:'media',name:'真狼影视',url:'https://zlys9.top',desc:'免费观看全网影视剧资源的网站。',badge:'free',tags:['在线观看']},
+{cat:'media',name:'雪落影视',url:'https://v.xl01.eu.cc',desc:'原修罗影视，内容丰富的综合型老牌优质影视站。',badge:'free',tags:['在线观看']},
+{cat:'media',name:'西瓜影院',url:'https://www.xiguadh.com',desc:'免费在线观看全网高清影视剧的综合型网站。',badge:'free',tags:['在线观看']},
+{cat:'media',name:'LIBVIO',url:'https://www.libvio.mov',desc:'以海外影视资源为主的老牌网站，画质优秀。',badge:'free',tags:['在线观看']},
+{cat:'media',name:'厂长资源',url:'https://www.cz4k.com',desc:'高清秒播不卡顿的综合型影视资源网站。',badge:'free',tags:['在线观看']},
+{cat:'media',name:'Anime1',url:'https://anime1.me',desc:'台湾动漫在线观看网站，支持国语/日语双轨。',badge:'free',tags:['动漫']},
+{cat:'media',name:'Mikan 蜜柑',url:'https://mikanime.tv',desc:'动漫 BT 资源聚合站，字幕组作品集中收录。',badge:'free',tags:['动漫']},
+{cat:'media',name:'Ani动漫',url:'https://ani.pekolove.net',desc:'动漫在线观看站，资源覆盖广。',badge:'free',tags:['动漫']},
+{cat:'media',name:'Trace.moe',url:'https://trace.moe',desc:'通过截图反向搜索动漫来源，精准定位番剧集数。',badge:'free',tags:['动漫']},
+{cat:'media',name:'动漫巴士',url:'https://dm84.net/',desc:'主打动漫在线观看，备用域名dm84.vip/dm84.pro，发布页dmbus.cc。',badge:'free',tags:['动漫']},
+{cat:'media',name:'MiFun',url:'https://mifun.tv/',desc:'动漫视频App，官网www.huai-de.com，开发方贵阳混鑫科技有限公司。',badge:'free',tags:['动漫']},
+{cat:'media',name:'粤漫之家',url:'https://www.ymvid.com/',desc:'主打粤语配音动漫的App，粤语动漫资源丰富。',badge:'free',tags:['动漫']},
+{cat:'media',name:'番薯动漫',url:'https://www.fsdm02.com',desc:'备用域名fsdm01.com/fanshudm.cc/fanshudm.com，发布页fsdm.top。',badge:'free',tags:['动漫']},
+{cat:'media',name:'次元城动画',url:'https://www.cycdm01.top/',desc:'动漫在线观看网站。',badge:'free',tags:['动漫']},
+{cat:'media',name:'Dialogue.moe',url:'https://dialogue.moe',desc:'通过动漫台词搜索具体出处，二次元必备。',badge:'free',tags:['动漫']},
+{cat:'media',name:'GYing 观影',url:'https://www.xn--ykq321c.com',desc:'观影GYing/片库网，老牌影视资源名站。',badge:'free',tags:['影视下载']},
+{cat:'media',name:'BD影视',url:'https://www.juhebd.com',desc:'支持迅雷、网盘下载的 4K 影视分享网站。',badge:'free',tags:['影视下载']},
+{cat:'media',name:'爱努努',url:'https://video.ainunu.com',desc:'分享各种主流网盘资源的老牌资源站点。',badge:'free',tags:['影视下载']},
+{cat:'media',name:'高清族',url:'https://www.hdzu.cc',desc:'提供 4K/1080/720 多版本资源的高清影视下载站。',badge:'free',tags:['影视下载']},
+{cat:'media',name:'迅雷电影天堂',url:'https://www.xl720.com',desc:'高清迅雷电影、电视剧下载老牌网站。',badge:'free',tags:['影视下载']},
+{cat:'media',name:'电影天堂',url:'https://www.dygod.net',desc:'专业老牌迅雷影视下载站，更新及时。',badge:'free',tags:['影视下载']},
+{cat:'media',name:'美剧粉',url:'https://www.mjf2020.com',desc:'专业美剧、Netflix 资源下载网站，更新及时。',badge:'free',tags:['影视下载']},
+{cat:'media',name:'人人影视站',url:'https://yyets.click/search',desc:'包含人人影视字幕组资源的分享网站。',badge:'free',tags:['影视下载']},
+{cat:'media',name:'团长资源',url:'https://t-rex.tzfile.com',desc:'霸王龙压制组，提供主流网盘下载的知名影视分享站。',badge:'free',tags:['影视下载']},
+{cat:'media',name:'全球纪录片库',url:'https://dao-fire.com',desc:'提供全球纪录片下载的资源网站，内容丰富。',badge:'free',tags:['影视下载']},
+{cat:'media',name:'高原下',url:'https://gaoyuanxia.cn/ying-shi',desc:'提供影片、电子书、游戏等资源的综合下载网站。',badge:'free',tags:['影视下载']},
+{cat:'media',name:'人人电影',url:'https://www.rrdynb.com/index.html',desc:'夸克、百度、迅雷、UC 等多网盘资源搜索站。',badge:'free',tags:['网盘搜索']},
+{cat:'media',name:'盘搜',url:'https://so.252035.xyz',desc:'支持搜索夸克、百度、迅雷、UC 等 10+ 网盘资源。',badge:'free',tags:['网盘搜索']},
+{cat:'media',name:'Showpaw',url:'https://www.showpaw.xyz',desc:'支持百度、夸克、115 等主流网盘的一站式影视搜索。',badge:'free',tags:['网盘搜索']},
+{cat:'media',name:'影视搜',url:'https://yingshi.co',desc:'以夸克、百度网盘为主的影视资源搜索网站。',badge:'free',tags:['网盘搜索']},
+{cat:'media',name:'库库光影',url:'https://kzzy.fun',desc:'夸克、迅雷、百度、UC、天翼、115 多平台影片搜索。',badge:'free',tags:['网盘搜索']},
+{cat:'media',name:'吾可盘',url:'https://5kep.top',desc:'夸克、百度、迅雷、UC 为主的多网盘搜索网站。',badge:'free',tags:['网盘搜索']},
+{cat:'media',name:'无名小卒',url:'https://wmxz.click',desc:'支持夸克、百度、UC 为主的网盘资源搜索引擎。',badge:'free',tags:['网盘搜索']},
+{cat:'media',name:'热剧搜索',url:'https://rejusou.com',desc:'以夸克网盘为主的网盘影视搜索引擎。',badge:'free',tags:['网盘搜索']},
+{cat:'media',name:'肥猫追剧',url:'https://mao.souldebug.com',desc:'短剧、电视剧、动漫综艺的夸克网盘资源分享站。',badge:'free',tags:['网盘搜索']},
+{cat:'media',name:'奇点追剧',url:'https://dy.qidiandaohang.com',desc:'夸克网盘、百度网盘资源为主的影视搜索平台。',badge:'free',tags:['网盘搜索']},
+{cat:'media',name:'妙搜云',url:'https://msmy.cn',desc:'支持国内各大网盘的资源搜索引擎。',badge:'free',tags:['网盘搜索']},
+{cat:'media',name:'刀搜盘',url:'https://www.daoso.cn',desc:'提供百度、迅雷网盘资源的搜索站。',badge:'free',tags:['网盘搜索']},
+{cat:'media',name:'夸父资源',url:'https://kuafzys.cn',desc:'夸克网盘为主的影视资源分享社区。',badge:'free',tags:['网盘搜索']},
+{cat:'media',name:'A控屋',url:'https://akongwu.com',desc:'恐怖电影资源分享为主，夸克网盘资源丰富。',badge:'free',tags:['网盘搜索']},
+{cat:'media',name:'TV搜',url:'https://www.tvso.uk',desc:'夸克网盘影视搜索，TV 资源丰富。',badge:'free',tags:['网盘搜索']},
+{cat:'media',name:'珈珈4K网盘',url:'http://j-so.com',desc:'以百度、夸克、迅雷、阿里、UC 为主的影片网盘搜索。',badge:'free',tags:['网盘搜索']},
+{cat:'media',name:'追新番',url:'https://www.fanxinzhui.com',desc:'专注日本影视剧的腾讯微云网盘资源分享网站。',badge:'free',tags:['网盘搜索']},
+{cat:'media',name:'放空一夏',url:'https://fangkong.cc',desc:'主打广播剧、有声剧的夸克资源网站。',badge:'free',tags:['网盘搜索']},
+{cat:'media',name:'JJ搜',url:'https://www.jjsou.com',desc:'夸克、百度、UC 网盘资源搜索站。',badge:'free',tags:['网盘搜索']},
+{cat:'media',name:'字幕库ASSRT',url:'https://assrt.net',desc:'老牌中文字幕下载站，收录海量影视字幕资源。',badge:'free',tags:['字幕工具']},
+{cat:'media',name:'SubHD',url:'https://subhd.tv',desc:'高质量中文字幕下载网站，更新及时。',badge:'free',tags:['字幕工具']},
+{cat:'media',name:'33台词',url:'https://33.agilestudio.cn',desc:'通过台词找到影片，还可进行二次加工创作。',badge:'free',tags:['字幕工具']},
+{cat:'media',name:'SauceNAO',url:'https://saucenao.com',desc:'以图搜图，快速找到动漫/插画的原始来源。',badge:'free',tags:['字幕工具']},
+{cat:'media',name:'VIP视频解析',url:'https://yinghezhinan.com/site/vipshipinjiexi/',desc:'免 VIP 观看全网付费影片的解析接口合集。',badge:'free',tags:['字幕工具']},
+{cat:'media',name:'神器TV',url:'https://tv.garden',desc:'在线免费电视直播，覆盖各大卫视频道。',badge:'free',tags:['直播']},
+{cat:'media',name:'澎湃新闻',url:'https://www.thepaper.cn',desc:'深度报道与调查新闻媒体，优质中文资讯。',badge:'cn',tags:['资讯']},
+{cat:'media',name:'IMDb',url:'https://www.imdb.com',desc:'全球最权威电影数据库，评分与演职员信息。',tags:['资讯']},
+
+// ── AUDIO ───────────────────────────────────────────────
+{cat:'audio',name:'Spotify',url:'https://open.spotify.com',desc:'全球最大音乐流媒体，8000 万+ 歌曲，播客丰富。',tags:['音乐平台']},
+{cat:'audio',name:'Apple Music',url:'https://music.apple.com',desc:'苹果音乐服务，无损音质，与 Apple 生态深度融合。',tags:['音乐平台']},
+{cat:'audio',name:'网易云音乐',url:'https://music.163.com',desc:'国内最大音乐社区，歌单与乐评生态完善。',badge:'cn',tags:['音乐平台']},
+{cat:'audio',name:'SoundCloud',url:'https://soundcloud.com',desc:'独立音乐人分享与发现社区，先锋音乐聚集地。',tags:['音乐平台']},
+{cat:'audio',name:'Bandcamp',url:'https://bandcamp.com',desc:'支持独立音乐人的付费音乐平台，品质保证。',tags:['音乐平台']},
+{cat:'audio',name:'Lucida',url:'https://lucida.to',desc:'多平台无损音乐下载工具，一站解决听歌下歌需求。',badge:'free',tags:['无损下载']},
+{cat:'audio',name:'FLAC.Life',url:'https://flac.life',desc:'无损 FLAC 音乐下载站，Hi-Res 音乐资源丰富。',badge:'free',tags:['无损下载']},
+{cat:'audio',name:'24BIT 无损',url:'https://www.24bit.net',desc:'专注 Hi-Res/24bit 无损音乐分享与下载。',badge:'free',tags:['无损下载']},
+{cat:'audio',name:'杜威音乐',url:'https://dtwav.com',desc:'Hi-Res 无损音乐下载，音质出众。',badge:'free',tags:['无损下载']},
+{cat:'audio',name:'1Music',url:'https://1music.cc/zh-CN',desc:'在线免费听歌，聚合多平台曲库。',badge:'free',tags:['无损下载']},
+{cat:'audio',name:'Musopen',url:'https://musopen.org',desc:'免费古典音乐下载，版权解放的古典乐宝库。',badge:'free',tags:['无损下载']},
+{cat:'audio',name:'Radio Garden',url:'https://radio.garden',desc:'全球电台地图可视化浏览，旋转地球收听世界电台。',badge:'free',tags:['电台']},
+{cat:'audio',name:'Radio5',url:'https://radio5.cn',desc:'国内在线电台聚合，各大广播收听一站搞定。',badge:'free',tags:['电台']},
+{cat:'audio',name:'TuneIn Radio',url:'https://tunein.com',desc:'网络电台聚合平台，体育/新闻/音乐电台全覆盖。',tags:['电台']},
+{cat:'audio',name:'Last.fm',url:'https://www.last.fm',desc:'音乐社交平台，追踪收听历史，发现相似音乐。',tags:['音乐社区']},
+{cat:'audio',name:'Discogs',url:'https://www.discogs.com',desc:'全球最大唱片数据库与二手黑胶交易市场。',tags:['音乐社区']},
+{cat:'audio',name:'Spotify Podcast',url:'https://open.spotify.com/browse/podcasts',desc:'Spotify 播客平台，海量节目覆盖各类主题。',tags:['播客']},
+{cat:'audio',name:'Anchor',url:'https://anchor.fm',desc:'播客创作与发布平台，零成本开始你的播客。',badge:'free',tags:['播客']},
+{cat:'audio',name:'TTS Maker',url:'https://ttsmaker.cn',desc:'AI 文字转语音工具，多种语言与音色可选。',badge:'free',tags:['音频工具']},
+{cat:'audio',name:'讯飞通传',url:'https://tongchuan.iflyrec.com/',desc:'科大讯飞出品的实时语音转录工具，精准率高。',badge:'cn',tags:['音频工具']},
+
+// ── GAMING ──────────────────────────────────────────────
+{cat:'game',name:'Steam',url:'https://store.steampowered.com',desc:'全球最大 PC 游戏平台，拥有海量游戏与社区功能。',tags:['游戏商店']},
+{cat:'game',name:'Epic Games',url:'https://www.epicgames.com',desc:'Epic 游戏商店，每周免费赠送 AAA 游戏。',tags:['游戏商店']},
+{cat:'game',name:'GOG',url:'https://www.gog.com',desc:'无 DRM 游戏商店，游戏购买永久拥有无限制。',tags:['游戏商店']},
+{cat:'game',name:'Itch.io',url:'https://itch.io',desc:'独立游戏发布与发现平台，创意小游戏聚集地。',tags:['游戏商店']},
+{cat:'game',name:'Humble Bundle',url:'https://www.humblebundle.com',desc:'游戏捆绑销售平台，买游戏同时支持慈善事业。',tags:['游戏商店']},
+{cat:'game',name:'机地游戏',url:'https://jidi520.com',desc:'免费游戏单机资源下载，含本体/Mod/修改器，每日更新。',badge:'free',tags:['单机资源']},
+{cat:'game',name:'SteamZG',url:'https://steamzg.com',desc:'Steam 游戏资源与攻略分享社区。',badge:'cn',tags:['单机资源']},
+{cat:'game',name:'ByRutGame',url:'https://byrutgame.org',desc:'PC 游戏资源下载站，更新及时。',badge:'free',tags:['单机资源']},
+{cat:'game',name:'RetroArch',url:'https://retroarch.com',desc:'多合一游戏模拟器前端，支持数十种复古游戏平台。',badge:'free',tags:['模拟器']},
+{cat:'game',name:'PCSX2',url:'https://pcsx2.net',desc:'PlayStation 2 模拟器，效果出色兼容性好。',badge:'free',tags:['模拟器']},
+{cat:'game',name:'Ryujinx',url:'https://ryujinx.org',desc:'Nintendo Switch 模拟器，支持大量游戏。',badge:'free',tags:['模拟器']},
+{cat:'game',name:'NES/FC 游戏',url:'https://fcpic.nesbbs.com/game.html',desc:'FC/NES 经典红白机游戏在线玩与 ROM 下载。',badge:'free',tags:['模拟器']},
+{cat:'game',name:'Poki',url:'https://poki.com/zh',desc:'免费在线小游戏平台，无需下载即玩。',badge:'free',tags:['在线小游戏']},
+{cat:'game',name:'CrazyGames',url:'https://www.crazygames.com',desc:'免费浏览器游戏集合，品质游戏精选。',badge:'free',tags:['在线小游戏']},
+{cat:'game',name:'ClassicJoy',url:'https://classicjoy.games/zh',desc:'经典老游戏在线体验，无需安装直接浏览器玩。',badge:'free',tags:['在线小游戏']},
+{cat:'game',name:'OldSWF',url:'https://oldswf.com',desc:'Flash 小游戏怀旧合集，重温童年经典。',badge:'free',tags:['在线小游戏']},
+{cat:'game',name:'IGN',url:'https://www.ign.com',desc:'全球顶级游戏媒体，评测/攻略/新闻全覆盖。',tags:['游戏资讯']},
+{cat:'game',name:'GameFAQs',url:'https://gamefaqs.gamespot.com',desc:'游戏攻略数据库，覆盖数十年经典游戏攻略。',tags:['游戏资讯']},
+{cat:'game',name:'Unity',url:'https://unity.com',desc:'全球最流行的游戏引擎，移动游戏首选。',tags:['游戏开发']},
+{cat:'game',name:'Godot',url:'https://godotengine.org',desc:'完全开源免费的游戏引擎，正在快速崛起。',badge:'free',tags:['游戏开发']},
+
+// ── DOWNLOADING ─────────────────────────────────────────
+{cat:'dl',name:'Ninite',url:'https://ninite.com',desc:'Windows 软件批量安装工具，一键安装常用软件。',badge:'free',tags:['Windows']},
+{cat:'dl',name:'PortableApps',url:'https://portableapps.com',desc:'便携软件平台，U 盘随身携带，无需安装。',badge:'free',tags:['Windows']},
+{cat:'dl',name:'Softpedia',url:'https://www.softpedia.com',desc:'全平台软件下载站，收录海量正版共享软件。',tags:['Windows']},
+{cat:'dl',name:'MajorGeeks',url:'https://majorgeeks.com',desc:'老牌 Windows 工具软件下载站，质量有保证。',tags:['Windows']},
+{cat:'dl',name:'Chocolatey',url:'https://chocolatey.org',desc:'Windows 命令行包管理器，批量自动化安装。',badge:'free',tags:['Windows']},
+{cat:'dl',name:'OldVersion',url:'https://oldversion.com',desc:'下载各软件旧版本，解决兼容性问题必备。',tags:['Windows']},
+{cat:'dl',name:'Homebrew',url:'https://brew.sh',desc:'macOS/Linux 最流行包管理器，一条命令安装软件。',badge:'free',tags:['Mac/Linux']},
+{cat:'dl',name:'Snapcraft',url:'https://snapcraft.io',desc:'Linux Snap 应用商店，覆盖发行版广泛。',badge:'free',tags:['Mac/Linux']},
+{cat:'dl',name:'yt-dlp',url:'https://github.com/yt-dlp/yt-dlp',desc:'功能最强的视频下载命令行工具，支持上千个网站。',badge:'free',tags:['视频下载']},
+{cat:'dl',name:'4K Video Downloader',url:'https://4kdownload.com',desc:'桌面端视频下载工具，支持 YouTube 等主流平台。',tags:['视频下载']},
+{cat:'dl',name:'JDownloader',url:'https://jdownloader.org',desc:'开源多线程下载管理器，支持大量网盘与视频源。',badge:'free',tags:['下载管理']},
+{cat:'dl',name:'IDM',url:'https://internetdownloadmanager.com',desc:'老牌多线程下载加速工具，支持浏览器集成。',tags:['下载管理']},
+
+// ── BT ──────────────────────────────────────────────────
+{cat:'bt',name:'1337x',url:'https://1337x.to',desc:'界面整洁的种子搜索站，电影/剧集/游戏资源丰富。',tags:['种子搜索']},
+{cat:'bt',name:'YTS',url:'https://yts.mx',desc:'高质量电影种子，体积小画质优，热门影片必备。',tags:['种子搜索']},
+{cat:'bt',name:'EZTV',url:'https://eztv.ag',desc:'专注剧集资源的种子站点，更新及时。',tags:['种子搜索']},
+{cat:'bt',name:'BTDB',url:'https://btdb.to',desc:'BT 种子数据库搜索，资源量庞大。',tags:['种子搜索']},
+{cat:'bt',name:'Demonoid',url:'https://demonoid.se',desc:'老牌半私人种子社区，资源质量较高。',tags:['种子搜索']},
+{cat:'bt',name:'摩羯座BT',url:'https://bt.mojiez.net',desc:'专注电影、电视剧资源的 BT 磁力站。',badge:'free',tags:['种子搜索']},
+{cat:'bt',name:'SeedHub',url:'https://sidhub.cc',desc:'专注分享优质影视资源的磁力/BT 网站。',badge:'free',tags:['种子搜索']},
+{cat:'bt',name:'POMO 4K',url:'https://pomo.mom',desc:'以 4K 资源为主的磁力资源站，画质极高。',badge:'free',tags:['种子搜索']},
+{cat:'bt',name:'磁力熊',url:'https://www.cilixiong.org',desc:'界面清爽的高分影视资源下载站。',badge:'free',tags:['种子搜索']},
+{cat:'bt',name:'qBittorrent',url:'https://qbittorrent.org',desc:'开源免费 BT 下载客户端，无广告轻量好用。',badge:'free',tags:['BT客户端']},
+{cat:'bt',name:'Transmission',url:'https://transmissionbt.com',desc:'极简 BT 客户端，Mac/Linux 用户首选。',badge:'free',tags:['BT客户端']},
+{cat:'bt',name:'aria2',url:'https://aria2.github.io',desc:'超轻量命令行下载工具，支持 HTTP/FTP/BT/磁力。',badge:'free',tags:['BT客户端']},
+
+// ── MOBILE ──────────────────────────────────────────────
+{cat:'mob',name:'Google Play',url:'https://play.google.com',desc:'Android 官方应用商店，全球最大应用生态。',tags:['应用商店']},
+{cat:'mob',name:'F-Droid',url:'https://f-droid.org',desc:'Android 开源应用商店，完全免费无追踪。',badge:'free',tags:['应用商店']},
+{cat:'mob',name:'APKMirror',url:'https://www.apkmirror.com',desc:'APK 安装包下载，版本全面，安全可信。',badge:'free',tags:['应用商店']},
+{cat:'mob',name:'App Store',url:'https://apps.apple.com',desc:'苹果官方应用商店，iOS/iPadOS/macOS 应用中心。',tags:['应用商店']},
+{cat:'mob',name:'Huawei AppGallery',url:'https://appgallery.huawei.com',desc:'华为应用商店，支持鸿蒙与 Android 应用分发。',badge:'cn',tags:['应用商店']},
+{cat:'mob',name:'AltStore',url:'https://altstore.io',desc:'iOS 侧载工具，无需越狱安装第三方应用。',tags:['iOS工具']},
+{cat:'mob',name:'Sideloadly',url:'https://sideloadly.io',desc:'iOS/iPadOS 侧载工具，操作简单支持多种签名。',tags:['iOS工具']},
+{cat:'mob',name:'Magisk',url:'https://topjohnwu.github.io/Magisk/',desc:'Android 系统级 ROOT 工具，无痕模式过银行检测。',badge:'open',tags:['Android工具']},
+{cat:'mob',name:'XDA Developers',url:'https://xda-developers.com',desc:'全球最大 Android 开发者社区，刷机/ROOT 论坛。',tags:['Android工具']},
+{cat:'mob',name:'LineageOS',url:'https://lineageos.org',desc:'最流行的第三方 Android 系统，隐私友好开源。',badge:'free',tags:['Android工具']},
+{cat:'mob',name:'TWRP',url:'https://twrp.me',desc:'第三方 Android Recovery，刷机备份必备工具。',badge:'free',tags:['Android工具']},
+
+// ── LINUX/MACOS ─────────────────────────────────────────
+{cat:'linux',name:'Ubuntu',url:'https://ubuntu.com',desc:'全球最流行 Linux 发行版，新手友好，生态完善。',badge:'free',tags:['发行版']},
+{cat:'linux',name:'Arch Linux',url:'https://archlinux.org',desc:'滚动发行版，极简设计，由用户自主掌控一切。',badge:'free',tags:['发行版']},
+{cat:'linux',name:'深度系统',url:'https://deepin.org',desc:'国产 Linux 桌面系统，UI 优美，中文支持最佳。',badge:'cn',tags:['发行版']},
+{cat:'linux',name:'Pop!_OS',url:'https://system76.com/pop-os',desc:'面向开发者和创作者的 Linux，NVIDIA 驱动开箱即用。',badge:'free',tags:['发行版']},
+{cat:'linux',name:'统信 UOS',url:'https://www.uniontech.com',desc:'国产商用 Linux 系统，政企场景广泛适配。',badge:'cn',tags:['发行版']},
+{cat:'linux',name:'Homebrew',url:'https://brew.sh',desc:'macOS/Linux 最流行包管理器，一条命令安装软件。',badge:'free',tags:['macOS']},
+{cat:'linux',name:'iTerm2',url:'https://iterm2.com',desc:'macOS 最佳终端替代品，功能强大高度可定制。',badge:'free',tags:['macOS']},
+{cat:'linux',name:'Oh My Zsh',url:'https://ohmyz.sh',desc:'Zsh 配置管理框架，数百个插件与主题。',badge:'free',tags:['命令行']},
+{cat:'linux',name:'Cockpit',url:'https://cockpit-project.org',desc:'Web 图形化 Linux 服务器管理界面，运维利器。',badge:'free',tags:['服务器']},
+{cat:'linux',name:'Explainshell',url:'https://explainshell.com',desc:'粘贴 Shell 命令即可拆解每个参数含义。',badge:'free',tags:['命令行']},
+{cat:'linux',name:'ShellCheck',url:'https://shellcheck.net',desc:'Shell 脚本静态分析工具，发现潜在 Bug。',badge:'free',tags:['命令行']},
+{cat:'linux',name:'GNOME',url:'https://gnome.org',desc:'最流行 Linux 桌面环境，现代简洁设计风格。',badge:'free',tags:['桌面环境']},
+{cat:'linux',name:'KDE Plasma',url:'https://kde.org',desc:'功能最丰富的 Linux 桌面，高度可定制化。',badge:'free',tags:['桌面环境']},
+
+// ── INTERNATIONAL ───────────────────────────────────────
+{cat:'intl',name:'Reddit',url:'https://reddit.com',desc:'全球最大链接分享社区，几乎涵盖所有话题圈子。',tags:['英语社区']},
+{cat:'intl',name:'Quora',url:'https://quora.com',desc:'英文高质量问答平台，专业人士聚集。',tags:['英语社区']},
+{cat:'intl',name:'Medium',url:'https://medium.com',desc:'英文文章写作与阅读平台，深度内容聚集地。',tags:['英语社区']},
+{cat:'intl',name:'Hacker News',url:'https://news.ycombinator.com',desc:'YC 旗下科技资讯社区，技术圈最重要讨论广场。',tags:['英语社区']},
+{cat:'intl',name:'Wikipedia EN',url:'https://en.wikipedia.org',desc:'英文维基百科，全球最大知识数据库。',badge:'free',tags:['英语社区']},
+{cat:'intl',name:'BBC',url:'https://bbc.com',desc:'英国广播公司，国际新闻权威媒体。',tags:['英文媒体']},
+{cat:'intl',name:'The Verge',url:'https://www.theverge.com',desc:'科技媒体标杆，覆盖科技、文化、科学，报道质量高。',tags:['英文媒体']},
+{cat:'intl',name:'知恵袋',url:'https://chiebukuro.yahoo.co.jp',desc:'日本最大知识问答社区，解决日语疑问必备。',tags:['日语社区']},
+{cat:'intl',name:'はてな',url:'https://hatena.ne.jp',desc:'日本博客与问答平台，技术与文化内容丰富。',tags:['日语社区']},
+{cat:'intl',name:'Naver',url:'https://naver.com',desc:'韩国最大搜索引擎与门户网站。',tags:['韩语社区']},
+{cat:'intl',name:'Le Monde',url:'https://lemonde.fr',desc:'法国最具影响力日报，世界新闻高质量报道。',tags:['其他语言']},
+{cat:'intl',name:'Der Spiegel',url:'https://spiegel.de',desc:'德国权威新闻周刊，欧洲政治经济深度报道。',tags:['其他语言']},
+];
+const CATS={ai:{label:'AI 工具',icon:'🤖'},dev:{label:'开发工具',icon:'💻'},edu:{label:'教育学习',icon:'📚'},tools:{label:'实用工具',icon:'🛠'},read:{label:'阅读书籍',icon:'📖'},media:{label:'影音娱乐',icon:'🎬'},audio:{label:'音乐播客',icon:'🎵'},game:{label:'游戏平台',icon:'🎮'},dl:{label:'软件下载',icon:'⬇️'},bt:{label:'BT 资源',icon:'🌊'},mob:{label:'移动应用',icon:'📱'},linux:{label:'Linux/macOS',icon:'🐧'},intl:{label:'国际社区',icon:'🌍'}};
+let state={cat:'all',view:'grid',query:''};
+let favorites=new Set(JSON.parse(localStorage.getItem('navhub-favs')||'[]'));
+function buildNav(){const nav=document.getElementById('navWrap');const g={'内容 & 创作':[],'影音 & 娱乐':[],'资源 & 系统':[]};const m={ai:'内容 & 创作',dev:'内容 & 创作',edu:'内容 & 创作',tools:'内容 & 创作',read:'内容 & 创作',media:'影音 & 娱乐',audio:'影音 & 娱乐',game:'影音 & 娱乐',dl:'资源 & 系统',bt:'资源 & 系统',mob:'资源 & 系统',linux:'资源 & 系统',intl:'资源 & 系统'};let html='';let lastG='';const items=[{cat:'all',icon:'⊞',label:'全部网站'},{cat:'fav',icon:'⭐',label:'我的收藏'}];Object.entries(CATS).forEach(([k,v])=>items.push({cat:k,icon:v.icon,label:v.label}));items.forEach(item=>{if(item.cat==='all'||item.cat==='fav'){if(lastG){html+='</div>';lastG=''}}else{const g2=m[item.cat];if(g2!==lastG){if(lastG)html+='</div>';html+=`<div class="nav-group-label">${g2}</div>`;lastG=g2}}html+=`<button class="nav-item ${state.cat===item.cat?'active':''}" data-cat="${item.cat}" onclick="setNav('${item.cat}')"><span class="nav-icon">${item.icon}</span><span>${item.label}</span><span class="nav-count" id="nc-${item.cat}">0</span></button>`});if(lastG)html+='</div>';nav.innerHTML=html}
+function setNav(cat){state.cat=cat;state.query='';document.getElementById('searchInput').value='';document.querySelectorAll('.nav-item').forEach(n=>n.classList.toggle('active',n.dataset.cat===cat));render();window.scrollTo({top:0,behavior:'smooth'})}
+function doSearch(v){state.query=v;state.cat='all';document.querySelectorAll('.nav-item').forEach(n=>n.classList.toggle('active',n.dataset.cat==='all'));render()}
+function setView(v){state.view=v;document.getElementById('vgrid').classList.toggle('active',v==='grid');document.getElementById('vlist').classList.toggle('active',v==='list');render()}
+function toggleFav(e,url){e.preventDefault();e.stopPropagation();favorites.has(url)?favorites.delete(url):favorites.add(url);localStorage.setItem('navhub-favs',JSON.stringify([...favorites]));updateCounts();render()}
+function toggleEditor(){const m=document.getElementById('editorModal');m.classList.toggle('open');if(m.classList.contains('open')){const sel=document.getElementById('editCat');sel.innerHTML=Object.entries(CATS).map(([k,v])=>`<option value="${k}">${v.icon} ${v.label}</option>`).join('')}}
+function addSite(){const n=document.getElementById('editName').value.trim();let u=document.getElementById('editUrl').value.trim();const c=document.getElementById('editCat').value;const d=document.getElementById('editDesc').value.trim();const t=document.getElementById('editTags').value.split(',').map(x=>x.trim()).filter(Boolean);if(!n||!u){alert('名称和网址不能为空');return}if(!u.match(/^https?:\/\//))u='https://'+u;SITES.push({cat:c,name:n,url:u,desc:d,tags:t});localStorage.setItem('navhub-sites',JSON.stringify(SITES));updateCounts();render();alert('添加成功！')}
+function saveSite(){const n=document.getElementById('editName').value.trim();const u=document.getElementById('editUrl').value.trim();const c=document.getElementById('editCat').value;const d=document.getElementById('editDesc').value.trim();const t=document.getElementById('editTags').value.split(',').map(x=>x.trim()).filter(Boolean);const i=SITES.findIndex(s=>s.url===u);if(i!==-1&&n&&u){SITES[i]={cat:c,name:n,url:u,desc:d,tags:t};localStorage.setItem('navhub-sites',JSON.stringify(SITES));updateCounts();render();alert('保存成功！')}}
+function deleteSite(){const u=document.getElementById('editUrl').value.trim();if(!u)return;if(!confirm('确定删除？'))return;const i=SITES.findIndex(s=>s.url===u);if(i!==-1){SITES.splice(i,1);localStorage.setItem('navhub-sites',JSON.stringify(SITES));updateCounts();render();alert('删除成功！')}}
+function toggleTheme(){const d=document.documentElement.getAttribute('data-theme')==='dark';document.documentElement.setAttribute('data-theme',d?'light':'dark');localStorage.setItem('navhub-theme',d?'light':'dark')}
+function updateCounts(){document.getElementById('totalNum').textContent=SITES.length;document.getElementById('favCount').textContent=favorites.size;['all','fav'].forEach(c=>{const e=document.getElementById('nc-'+c);if(e)e.textContent=c==='all'?SITES.length:favorites.size});Object.keys(CATS).forEach(c=>{const e=document.getElementById('nc-'+c);if(e)e.textContent=SITES.filter(s=>s.cat===c).length})}
+function hostOf(url){try{return new URL(url).hostname}catch{return''}}
+function buildCard(s){const isFav=favorites.has(s.url);const favBtn=`<button class="fav-btn ${isFav?'active':''}" onclick="toggleFav(event,'${s.url}')">${isFav?'★':'☆'}</button>`;const badge=s.badge?`<span class="card-badge">${s.badge.toUpperCase()}</span>`:'';const tags=(s.tags||[]).slice(0,2).map(t=>`<span class="ctag">${t}</span>`).join('');const host=hostOf(s.url);const favicon=host?`https://${host}/favicon.ico`:'';const ico=favicon?`<img src="${favicon}" alt="" loading="lazy" onerror="this.parentNode.innerHTML='${s.name[0]}'">`:s.name[0];return`<a class="card" href="${s.url}" target="_blank" rel="noopener">${favBtn}${badge}<div class="card-top"><div class="card-ico">${ico}</div><div class="card-meta"><div class="card-name">${s.name}</div><div class="card-host">${host}</div><div class="card-tags-row">${tags}</div></div></div>${s.desc?`<div class="card-desc">${s.desc}</div>`:''}</a>`}
+function render(){const c=document.getElementById('content');const q=state.query.toLowerCase();const lv=state.view==='list'?' list-view':'';if(q){const hits=SITES.filter(s=>s.name.toLowerCase().includes(q)||(s.desc||'').toLowerCase().includes(q)||s.url.toLowerCase().includes(q)||(s.tags||[]).some(t=>t.toLowerCase().includes(q)));const g={};hits.forEach(s=>{g[s.cat]=g[s.cat]||[];g[s.cat].push(s)});const order=Object.keys(CATS).filter(k=>g[k]);if(!order.length){c.innerHTML=`<div class="empty">没有找到 "${state.query}" 相关内容 🔍</div>`;return}c.innerHTML=order.map(cat=>{const m=CATS[cat];return`<div class="section"><div class="sec-hd"><div class="sec-dot"></div><span class="sec-title">${m.icon} ${m.label}</span><span class="sec-count">${g[cat].length} 个</span></div><div class="cards${lv}">${g[cat].map(buildCard).join('')}</div></div>`}).join('');return}if(state.cat==='fav'){const items=SITES.filter(s=>favorites.has(s.url));c.innerHTML=`<div class="section"><div class="sec-hd"><div class="sec-dot" style="background:#facc15"></div><span class="sec-title">⭐ 我的收藏</span><span class="sec-count">${items.length} 个</span></div><div class="cards${lv}">${items.length?items.map(buildCard).join(''):'<div class="empty">暂无收藏</div>'}</div></div>`;return}const cats=state.cat==='all'?Object.keys(CATS):[state.cat];c.innerHTML=cats.map(cat=>{const m=CATS[cat];const items=SITES.filter(s=>s.cat===cat);if(!items.length)return'';return`<div class="section"><div class="sec-hd"><div class="sec-dot"></div><span class="sec-title">${m.icon} ${m.label}</span><span class="sec-count">${items.length} 个</span></div><div class="cards${lv}">${items.map(buildCard).join('')}</div></div>`}).filter(Boolean).join('')}
+window.addEventListener('scroll',()=>{document.getElementById('btt').classList.toggle('show',window.scrollY>300)});
+(function(){const s=localStorage.getItem('navhub-sites');if(s){try{SITES.splice(0,SITES.length,...JSON.parse(s))}catch(e){}}const v=localStorage.getItem('navhub-view');if(v)state.view=v;const t=localStorage.getItem('navhub-theme');if(t)document.documentElement.setAttribute('data-theme',t);buildNav();updateCounts();render();document.getElementById('vgrid').classList.toggle('active',state.view==='grid');document.getElementById('vlist').classList.toggle('active',state.view==='list')})();
+</script>
+</body>
+</html>
