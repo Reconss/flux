@@ -2,7 +2,7 @@
 // FLUX · main.js (Redesigned)
 // ════════════════════════════════════════════════════════
 
-let state = { cat: 'all', view: 'grid', query: '' };
+let state = { cat: 'all', sub: '', view: 'grid', query: '' };
 let favorites = new Set(JSON.parse(localStorage.getItem('navhub-favs') || '[]'));
 
 // ── NAVIGATION ─────────────────────────────────────────
@@ -41,6 +41,7 @@ function buildNav() {
 
 function setNav(cat) {
   state.cat = cat;
+  state.sub = '';
   state.query = '';
   document.getElementById('searchInput').value = '';
   document.querySelectorAll('.nav-item').forEach(n => n.classList.toggle('active', n.dataset.cat === cat));
@@ -51,9 +52,17 @@ function setNav(cat) {
 // ── SEARCH ─────────────────────────────────────────────
 function doSearch(v) {
   state.query = v;
+  state.sub = '';
   document.querySelectorAll('.nav-item').forEach(n => n.classList.toggle('active', n.dataset.cat === 'all'));
   state.cat = 'all';
   render();
+}
+
+function setSub(tag) {
+  state.sub = (state.sub === tag) ? '' : tag;
+  render();
+  const el = document.querySelector('.sub-bar');
+  if (el) el.scrollIntoView({behavior:'smooth', block:'start'});
 }
 
 // ── VIEW ───────────────────────────────────────────────
@@ -263,17 +272,66 @@ function render() {
   
   // Normal
   const cats = state.cat === 'all' ? Object.keys(CATS) : [state.cat];
+  // 全部视图：保持简洁的扁平 section（不展开子分类）
+  if (state.cat === 'all') {
+    content.innerHTML = cats.map(cat => {
+      const m = CATS[cat];
+      const items = SITES.filter(s => s.cat === cat);
+      if (!items.length) return '';
+      return `<div class="section" id="sec-${cat}">
+        <div class="sec-hd">
+          <div class="sec-dot"></div>
+          <span class="sec-title">${m.icon} ${m.label}</span>
+          <span class="sec-count">${items.length} 个</span>
+        </div>
+        <div class="cards${lv}">${items.map(buildCard).join('')}</div>
+      </div>`;
+    }).filter(Boolean).join('');
+    bindTilt();
+    return;
+  }
+  // 单个分类视图：sub-bar 筛选条 + 按子分类视觉分组
   content.innerHTML = cats.map(cat => {
     const m = CATS[cat];
     const items = SITES.filter(s => s.cat === cat);
     if (!items.length) return '';
+    // 计算子分类（仅数量 >=3 的，避免 tab 过多）
+    const tagCount = {};
+    items.forEach(s => (s.tags||[]).forEach(t => tagCount[t] = (tagCount[t]||0)+1));
+    const subTags = Object.entries(tagCount).filter(([_,c]) => c >= 3).sort((a,b) => b[1]-a[1]);
+    const subBar = subTags.length ? `
+      <div class="sub-bar" role="tablist" aria-label="${m.label}子分类">
+        <button class="sub-pill ${state.sub===''?'active':''}" role="tab" aria-selected="${state.sub===''}" onclick="setSub('')">全部 <span class="sub-c">${items.length}</span></button>
+        ${subTags.map(([t, c]) => `<button class="sub-pill ${state.sub===t?'active':''}" role="tab" aria-selected="${state.sub===t}" onclick="setSub('${t.replace(/'/g, "\\'")}')">${t} <span class="sub-c">${c}</span></button>`).join('')}
+      </div>` : '';
+    // 子分类过滤
+    const filtered = state.sub ? items.filter(s => (s.tags||[]).includes(state.sub)) : items;
+    // 全部模式下按子分类分组
+    let bodyHtml = '';
+    if (!state.sub && subTags.length) {
+      // 主组（不属任何 subTag 的）
+      const noSub = items.filter(s => !s.tags || !s.tags.some(t => subTags.some(([t2]) => t2 === t)));
+      if (noSub.length) {
+        bodyHtml += `<div class="sub-group"><div class="sub-group-hd">其他</div><div class="cards${lv}">${noSub.map(buildCard).join('')}</div></div>`;
+      }
+      subTags.forEach(([t, c]) => {
+        const groupItems = items.filter(s => (s.tags||[]).includes(t));
+        if (!groupItems.length) return;
+        bodyHtml += `<div class="sub-group"><div class="sub-group-hd">${t} <span class="sub-group-c">${c}</span></div><div class="cards${lv}">${groupItems.map(buildCard).join('')}</div></div>`;
+      });
+    } else {
+      // 过滤模式：扁平展示
+      bodyHtml = filtered.length ? `<div class="cards${lv}">${filtered.map(buildCard).join('')}</div>` : `<div class="empty" style="padding:60px 20px;color:var(--text-m);text-align:center;">该子分类下暂无内容</div>`;
+    }
+    const countText = state.sub ? `${filtered.length} / ${items.length} 个` : `${items.length} 个`;
     return `<div class="section" id="sec-${cat}">
       <div class="sec-hd">
         <div class="sec-dot"></div>
         <span class="sec-title">${m.icon} ${m.label}</span>
-        <span class="sec-count">${items.length} 个</span>
+        <span class="sec-count">${countText}</span>
       </div>
-      <div class="cards${lv}">${items.map(buildCard).join('')}</div>
+      ${subBar}
+      ${bodyHtml}
     </div>`;
   }).filter(Boolean).join('');
   

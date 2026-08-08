@@ -201,6 +201,69 @@ button { font-family: inherit; cursor: pointer; }
 .sec-title { font-size: 13px; font-weight: 600; }
 .sec-count { margin-left: auto; font-size: 11px; color: var(--text-m); }
 
+/* ── SUB-CATEGORY FILTER BAR (右侧分类筛选) ── */
+.sub-bar {
+  display: flex; flex-wrap: wrap; gap: 6px;
+  margin: 4px 0 16px 0; padding: 0;
+  position: relative;
+}
+.sub-bar::after {
+  content: ''; position: absolute; left: 0; right: 0; bottom: -1px;
+  height: 1px;
+  background: linear-gradient(90deg, transparent, var(--border), transparent);
+}
+.sub-pill {
+  display: inline-flex; align-items: center; gap: 6px;
+  padding: 6px 13px; min-height: 32px;
+  font: 500 12.5px/1 var(--sans);
+  background: var(--surface); border: 1px solid var(--border);
+  border-radius: 100px; color: var(--text-m);
+  cursor: pointer;
+  transition: background .15s ease-out, color .15s ease-out, border-color .15s ease-out, transform .12s ease-out;
+  user-select: none;
+}
+.sub-pill:hover {
+  background: var(--surface2); color: var(--text);
+  border-color: var(--border-h);
+}
+.sub-pill:active { transform: scale(0.97); }
+.sub-pill:focus-visible {
+  outline: 2px solid var(--a1); outline-offset: 2px;
+}
+.sub-pill.active {
+  background: var(--a1); color: #0d0a08; border-color: var(--a1);
+  box-shadow: 0 1px 0 var(--a1-glow), 0 0 0 4px var(--a1-soft);
+  font-weight: 600;
+}
+[data-theme="light"] .sub-pill.active { color: #fff; }
+.sub-pill .sub-c {
+  display: inline-flex; align-items: center; justify-content: center;
+  min-width: 18px; height: 18px; padding: 0 5px;
+  font-size: 10.5px; font-weight: 600;
+  background: rgba(255,255,255,.08); color: inherit;
+  border-radius: 9px;
+  font-variant-numeric: tabular-nums;
+}
+[data-theme="dark"] .sub-pill .sub-c { background: rgba(255,255,255,.06); }
+[data-theme="light"] .sub-pill .sub-c { background: rgba(0,0,0,.06); }
+.sub-pill.active .sub-c { background: rgba(0,0,0,.18); color: #0d0a08; }
+[data-theme="light"] .sub-pill.active .sub-c { background: rgba(255,255,255,.28); color: #fff; }
+
+/* ── SUB-GROUP (全部模式下按子分类视觉分组) ── */
+.sub-group { margin: 0 0 18px 0; }
+.sub-group:last-child { margin-bottom: 0; }
+.sub-group-hd {
+  display: flex; align-items: center; gap: 8px;
+  font-size: 12px; font-weight: 600; color: var(--text);
+  margin: 0 0 10px 0; padding: 0 0 6px 0;
+  border-bottom: 1px dashed var(--border);
+}
+.sub-group-c {
+  font-size: 10.5px; font-weight: 500; color: var(--text-m);
+  background: var(--surface2); padding: 1px 7px;
+  border-radius: 8px; font-variant-numeric: tabular-nums;
+}
+
 .cards { display: grid; grid-template-columns: repeat(auto-fill, minmax(210px, 1fr)); gap: 10px; }
 .cards.list-view { grid-template-columns: 1fr; }
 
