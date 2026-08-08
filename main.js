@@ -35,8 +35,10 @@ function applyConfig() {
   SITES.forEach(s => {
     // 1. sites 精确覆盖（最高优先级）
     if (CONFIG.sites && CONFIG.sites[s.url]) {
-      s.cat  = CONFIG.sites[s.url].cat;
-      s.tags = CONFIG.sites[s.url].tags || [];
+      const ov = CONFIG.sites[s.url];
+      s.cat  = ov.cat;
+      s.tags = ov.tags || [];
+      if (ov.name) s.name = ov.name;  // 名称覆盖
       return;
     }
     // 2. rules 域名匹配
