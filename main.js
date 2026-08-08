@@ -2,6 +2,57 @@
 // FLUX · main.js (Redesigned)
 // ════════════════════════════════════════════════════════
 
+// ── 从 config.js 加载分类配置 ──
+const CATS = (function() {
+  if (typeof CONFIG === 'undefined') return {};
+  const out = {};
+  Object.entries(CONFIG.cats).forEach(([k, v]) => {
+    out[k] = {label: v.label, cls: 'c-' + k, icon: v.icon};
+  });
+  return out;
+})();
+
+// ── 把 CONFIG 应用到 SITES（合并 cat / tags） ──
+function applyConfig() {
+  if (typeof CONFIG === 'undefined') {
+    console.warn('CONFIG not loaded, using raw SITES');
+    return;
+  }
+  const domainCache = {};
+  function matchDomain(url) {
+    try {
+      const host = new URL(url).hostname.toLowerCase().replace(/^www\./, '');
+      const parts = host.split('.');
+      const reg = parts.length >= 2 ? parts.slice(-2).join('.') : host;
+      for (const r of CONFIG.rules) {
+        if (reg === r.domain || host.endsWith('.' + r.domain) || host === r.domain) {
+          return r;
+        }
+      }
+    } catch (e) {}
+    return null;
+  }
+  SITES.forEach(s => {
+    // 1. sites 精确覆盖（最高优先级）
+    if (CONFIG.sites && CONFIG.sites[s.url]) {
+      s.cat  = CONFIG.sites[s.url].cat;
+      s.tags = CONFIG.sites[s.url].tags || [];
+      return;
+    }
+    // 2. rules 域名匹配
+    const rule = matchDomain(s.url);
+    if (rule) {
+      s.cat  = rule.cat;
+      s.tags = rule.tag ? [rule.tag] : [];
+      return;
+    }
+    // 3. 默认归类
+    s.cat  = CONFIG.default.cat;
+    s.tags = CONFIG.default.tags || [];
+  });
+}
+applyConfig();
+
 let state = { cat: 'all', sub: '', view: 'grid', query: '' };
 let favorites = new Set(JSON.parse(localStorage.getItem('navhub-favs') || '[]'));
 
