@@ -1,47 +1,167 @@
 <!DOCTYPE html>
 <html lang="zh-CN" data-theme="dark">
 <head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width,initial-scale=1.0">
-<title>Flux · 导航中心</title>
-<link rel="icon" href="data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHZpZXdCb3g9IjAgMCA0MCA0MCIgZmlsbD0ibm9uZSI+CiAgPGRlZnM+CiAgICA8bGluZWFyR3JhZGllbnQgaWQ9ImdyYWQiIHgxPSIwIiB5MT0iMCIgeDI9IjQwIiB5Mj0iNDAiPgogICAgICA8c3RvcCBvZmZzZXQ9IjAiIHN0b3AtY29sb3I9IiM2MzY2ZjEiLz4KICAgICAgPHN0b3Agb2Zmc2V0PSIxIiBzdG9wLWNvbG9yPSIjZWM0ODk5Ii8+CiAgICA8L2xpbmVhckdyYWRpZW50PgogIDwvZGVmcz4KICA8cmVjdCB3aWR0aD0iNDAiIGhlaWdodD0iNDAiIHJ4PSIxMiIgZmlsbD0idXJsKCNncmFkKSIvPgogIDxwYXRoIGQ9Ik0yMCA4TDMwIDI4TDIwIDIyTDEwIDI4TDIwIDhaIiBmaWxsPSJ3aGl0ZSIgc3Ryb2tlPSJ3aGl0ZSIgc3Ryb2tlLXdpZHRoPSIxLjUiIHN0cm9rZS1saW5lam9pbj0icm91bmQiLz4KICA8Y2lyY2xlIGN4PSIyMCIgY3k9IjMyIiByPSIyLjUiIGZpbGw9IndoaXRlIi8+Cjwvc3ZnPg=="http://www.w3.org/2000/svg" viewBox="0 0 40 40" fill="none">
-  <defs>
-    <linearGradient id="grad" x1="0" y1="0" x2="40" y2="40" gradientUnits="userSpaceOnUse">
-      <stop offset="0" stop-color="#6366f1"/>
-      <stop offset="1" stop-color="#ec4899"/>
-    </linearGradient>
-  </defs>
-  <rect width="40" height="40" rx="12" fill="url(#grad)"/>
-  <path d="M20 8L28 28L20 22L12 28L20 8Z" fill="white" stroke="white" stroke-width="1.5" stroke-linejoin="round"/>
-  <circle cx="20" cy="32" r="2" fill="white"/>
-</svg>">
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width,initial-scale=1.0"/>
+<title>🚀 Flux · 导航站</title>
+  <link rel="icon" href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 40 40%22><defs><linearGradient id=%22g%22 x1=%220%25%22 y1=%220%25%22 x2=%22100%25%22 y2=%22100%25%22><stop offset=%220%25%22 stop-color=%22%236366f1%22/><stop offset=%22100%25%22 stop-color=%22%238b5cf6%22/></linearGradient></defs><rect width=%2240%22 height=%2240%22 rx=%2212%22 fill=%22url(%23g)%22/><rect x=%228%22 y=%228%22 width=%2210%22 height=%2210%22 rx=%223%22 fill=%22white%22/><rect x=%2222%22 y=%228%22 width=%2210%22 height=%2210%22 rx=%223%22 fill=%22white%22 fill-opacity=%220.7%22/><rect x=%228%22 y=%2222%22 width=%2210%22 height=%2210%22 rx=%223%22 fill=%22white%22 fill-opacity=%220.7%22/><rect x=%2222%22 y=%2222%22 width=%2210%22 height=%2210%22 rx=%223%22 fill=%22%23f472b6%22/><circle cx=%2230%22 cy=%2210%22 r=%223%22 fill=%22%23fbbf24%22/></svg>">
 <link rel="preconnect" href="https://fonts.googleapis.com">
-<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=JetBrains+Mono:wght@400;600&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&family=JetBrains+Mono:wght@400;600&display=swap" rel="stylesheet">
+<!-- 防闪烁：在 CSS 渲染前立即同步主题 -->
 <script>
 (function(){
-  var s=localStorage.getItem("navhub-theme");
-  if(s)document.documentElement.setAttribute("data-theme",s);
-  else if(window.matchMedia("(prefers-color-scheme:light)").matches)document.documentElement.setAttribute("data-theme","light");
+  const saved = localStorage.getItem('navhub-theme');
+  if (saved) {
+    document.documentElement.setAttribute('data-theme', saved);
+  } else {
+    const prefersDark = window.matchMedia('(prefers-color-scheme: dark)').matches;
+    document.documentElement.setAttribute('data-theme', prefersDark ? 'dark' : 'light');
+  }
 })();
 </script>
 <link rel="stylesheet" href="style.css">
 </head>
 <body>
-<div class="bg" aria-hidden="true"></div>
-<div class="shell">
+
+<!-- ══ SIDEBAR ══════════════════════════════════════════ -->
 <aside class="sidebar">
-<div class="logo"><div class="logo-icon"><svg width="22" height="22" viewBox="0 0 24 24" fill="none"><rect x="3" y="3" width="8" height="8" rx="2" fill="white" fill-opacity="0.95"/><rect x="13" y="3" width="8" height="8" rx="2" fill="white" fill-opacity="0.7"/><rect x="3" y="13" width="8" height="8" rx="2" fill="white" fill-opacity="0.7"/><rect x="13" y="13" width="8" height="8" rx="2" fill="#f472b6"/><circle cx="18" cy="6" r="2" fill="#facc15"/></svg></div><div class="logo-wordmark"><div class="logo-title">Flux</div><div class="logo-ver">NAVIGATION · v4</div></div></div>
-<nav class="nav-wrap" id="navWrap"></nav>
-<div class="sidebar-foot"><button class="sfoot-btn" id="themeBtn" onclick="toggleTheme()"><span>🌙</span><span>主题</span></button><button class="sfoot-btn" onclick="toggleEditor()"><span>⚙️</span><span>管理</span></button></div>
+  <div class="logo">
+    <div class="logo-icon">
+      <svg width="40" height="40" viewBox="0 0 40 40" fill="none" xmlns="http://www.w3.org/2000/svg">
+        <defs>
+          <linearGradient id="logoGrad" x1="0%" y1="0%" x2="100%" y2="100%">
+            <stop offset="0%" stop-color="#6366f1"/>
+            <stop offset="100%" stop-color="#8b5cf6"/>
+          </linearGradient>
+          <linearGradient id="logoGrad2" x1="0%" y1="0%" x2="100%" y2="100%">
+            <stop offset="0%" stop-color="#f472b6"/>
+            <stop offset="100%" stop-color="#fb923c"/>
+          </linearGradient>
+        </defs>
+        <rect width="40" height="40" rx="12" fill="url(#logoGrad)"/>
+        <rect x="8" y="8" width="10" height="10" rx="3" fill="white" fill-opacity="0.95"/>
+        <rect x="22" y="8" width="10" height="10" rx="3" fill="white" fill-opacity="0.7"/>
+        <rect x="8" y="22" width="10" height="10" rx="3" fill="white" fill-opacity="0.7"/>
+        <rect x="22" y="22" width="10" height="10" rx="3" fill="url(#logoGrad2)"/>
+        <circle cx="30" cy="10" r="3" fill="#fbbf24"/>
+      </svg>
+    </div>
+    <div class="logo-wordmark">
+      <div class="logo-title">Flux</div>
+      <div class="logo-ver">精选导航 · v4</div>
+    </div>
+  </div>
+
+  <nav class="nav-wrap">
+    <a class="nav-item active" href="#" data-cat="all"   onclick="setNav(this)"><span class="nav-icon">⊞</span><span>全部网站</span><span class="nav-count" id="nc-all">—</span></a>
+    <a class="nav-item"        href="#" data-cat="fav"   onclick="setNav(this)"><span class="nav-icon">⭐</span><span>我的收藏</span><span class="nav-count" id="nc-fav">0</span></a>
+
+    <div class="nav-group-label">内容 & 创作</div>
+    <a class="nav-item" href="#" data-cat="ai"    onclick="setNav(this)"><span class="nav-icon">🤖</span><span>AI 工具</span><span class="nav-count" id="nc-ai"></span></a>
+    <a class="nav-item" href="#" data-cat="dev"   onclick="setNav(this)"><span class="nav-icon">💻</span><span>开发工具</span><span class="nav-count" id="nc-dev"></span></a>
+    <a class="nav-item" href="#" data-cat="edu"   onclick="setNav(this)"><span class="nav-icon">📚</span><span>教育学习</span><span class="nav-count" id="nc-edu"></span></a>
+    <a class="nav-item" href="#" data-cat="tools" onclick="setNav(this)"><span class="nav-icon">🛠</span><span>实用工具</span><span class="nav-count" id="nc-tools"></span></a>
+    <a class="nav-item" href="#" data-cat="read"  onclick="setNav(this)"><span class="nav-icon">📖</span><span>阅读书籍</span><span class="nav-count" id="nc-read"></span></a>
+
+    <div class="nav-group-label">影音 & 娱乐</div>
+    <a class="nav-item" href="#" data-cat="media" onclick="setNav(this)"><span class="nav-icon">🎬</span><span>影音娱乐</span><span class="nav-count" id="nc-media"></span></a>
+    <a class="nav-item" href="#" data-cat="audio" onclick="setNav(this)"><span class="nav-icon">🎵</span><span>音乐播客</span><span class="nav-count" id="nc-audio"></span></a>
+    <a class="nav-item" href="#" data-cat="game"  onclick="setNav(this)"><span class="nav-icon">🎮</span><span>游戏平台</span><span class="nav-count" id="nc-game"></span></a>
+
+    <div class="nav-group-label">资源 & 系统</div>
+    <a class="nav-item" href="#" data-cat="dl"    onclick="setNav(this)"><span class="nav-icon">⬇️</span><span>软件下载</span><span class="nav-count" id="nc-dl"></span></a>
+    <a class="nav-item" href="#" data-cat="bt"    onclick="setNav(this)"><span class="nav-icon">🌊</span><span>BT 资源</span><span class="nav-count" id="nc-bt"></span></a>
+    <a class="nav-item" href="#" data-cat="mob"   onclick="setNav(this)"><span class="nav-icon">📱</span><span>移动应用</span><span class="nav-count" id="nc-mob"></span></a>
+    <a class="nav-item" href="#" data-cat="linux" onclick="setNav(this)"><span class="nav-icon">🐧</span><span>Linux/macOS</span><span class="nav-count" id="nc-linux"></span></a>
+    <a class="nav-item" href="#" data-cat="intl"  onclick="setNav(this)"><span class="nav-icon">🌍</span><span>国际社区</span><span class="nav-count" id="nc-intl"></span></a>
+  </nav>
+
+  <div class="sidebar-foot">
+    <button class="sfoot-btn" id="themeBtn" onclick="toggleTheme()" title="切换主题">
+      <span class="sfoot-icon">🌙</span><span>主题</span>
+    </button>
+    <button class="sfoot-btn" onclick="toggleEditor()" title="站点管理">
+      <span class="sfoot-icon">⚙️</span><span>管理</span>
+    </button>
+  </div>
 </aside>
+
+<!-- ══ MAIN ═════════════════════════════════════════════ -->
 <div class="main">
-<div class="topbar"><div class="search-wrap"><span class="search-ico">🔍</span><input id="searchInput" type="text" placeholder="搜索名称、描述、标签或网址…" oninput="doSearch(this.value)"></div><div class="view-toggle"><button class="view-btn active" id="vgrid" onclick="setView('grid')">⊞ 网格</button><button class="view-btn" id="vlist" onclick="setView('list')">☰ 列表</button></div></div>
-<button class="btt" id="btt" onclick="window.scrollTo({top:0,behavior:'smooth'})">↑</button>
-<div class="stats-bar"><div class="stat"><span class="stat-n" id="totalNum">—</span><span class="stat-l">收录站点</span></div><div class="stat"><span class="stat-n">13</span><span class="stat-l">分类</span></div><div class="stat"><span class="stat-n" id="favCount">0</span><span class="stat-l">已收藏</span></div></div>
-<div class="content" id="content"></div>
+
+  <!-- topbar -->
+  <div class="topbar">
+    <div class="search-wrap">
+      <span class="search-ico">🔍</span>
+      <input class="search-input" id="searchInput" type="text"
+             placeholder="搜索名称、描述、标签或网址…" oninput="doSearch(this.value)">
+    </div>
+    <div class="topbar-right">
+      <div class="view-toggle">
+        <button class="view-btn active" id="vgrid" onclick="setView('grid')" title="网格视图">⊞ 网格</button>
+        <button class="view-btn"        id="vlist" onclick="setView('list')" title="列表视图">☰ 列表</button>
+      </div>
+    </div>
+  </div>
+
+  <button class="back-to-top" id="backToTop" onclick="scrollToTop()" title="返回顶部">↑</button>
+
+  <!-- hero -->
+  <div class="hero">
+    <div class="hero-scenarios" id="heroScenarios"></div>
+    <div class="hero-picks"     id="heroPicks"></div>
+    <div class="hero-foot">
+      <div class="hstat"><span class="hstat-n" id="totalNum">—</span><span class="hstat-l">收录站点</span></div>
+      <div class="hstat"><span class="hstat-n">13</span><span class="hstat-l">分类</span></div>
+      <div class="hstat"><span class="hstat-n" id="favCountFoot">0</span><span class="hstat-l">已收藏</span></div>
+      <button class="hero-foot-tip" onclick="refreshPicks()">🔀 换一批</button>
+    </div>
+  </div>
+
+  <div class="content" id="content"></div>
 </div>
+
+<!-- ══ EDITOR MODAL ══════════════════════════════════════ -->
+<div class="editor-modal" id="editorModal">
+  <div class="editor-box">
+    <div class="editor-header">
+      <span class="editor-title">⚙️ 站点管理</span>
+      <button class="editor-close" onclick="toggleEditor()">✕</button>
+    </div>
+    <div class="editor-body">
+      <div class="editor-row"><label class="editor-label">网站名称</label><input class="editor-input" id="editName" placeholder="输入名称"></div>
+      <div class="editor-row"><label class="editor-label">网址 URL</label><input class="editor-input" id="editUrl"  placeholder="https://"></div>
+      <div class="editor-row"><label class="editor-label">分类</label><select class="editor-select" id="editCat"></select></div>
+      <div class="editor-row"><label class="editor-label">描述</label><input class="editor-input" id="editDesc" placeholder="简要描述"></div>
+      <div class="editor-row"><label class="editor-label">标签（逗号分隔）</label><input class="editor-input" id="editTags" placeholder="标签1,标签2"></div>
+      <div class="editor-row">
+        <label class="editor-label">徽章</label>
+        <select class="editor-select" id="editBadge">
+          <option value="">无</option>
+          <option value="hot">HOT</option>
+          <option value="new">NEW</option>
+          <option value="free">FREE</option>
+          <option value="cn">中文</option>
+          <option value="open">开源</option>
+        </select>
+      </div>
+      <div class="editor-actions">
+        <button class="editor-btn secondary" onclick="addSite()">➕ 添加</button>
+        <button class="editor-btn primary"   onclick="saveSite()">💾 保存</button>
+        <button class="editor-btn danger"    onclick="deleteSite()">🗑 删除</button>
+      </div>
+      <div class="import-export">
+        <div class="editor-label" style="margin-bottom:8px">📦 数据管理</div>
+        <div class="ie-btns">
+          <button class="ie-btn" onclick="exportData()">⬇️ 导出 JSON</button>
+          <button class="ie-btn" onclick="document.getElementById('importFile').click()">⬆️ 导入 JSON</button>
+          <input type="file" id="importFile" accept=".json" style="display:none" onchange="importData(this)">
+        </div>
+      </div>
+    </div>
+  </div>
 </div>
-<div class="editor-modal" id="editorModal"><div class="editor-box"><div class="editor-header"><span class="editor-title">⚙️ 站点管理</span><button class="editor-close" onclick="toggleEditor()">✕</button></div><div class="editor-body"><div class="editor-row"><label>网站名称</label><input id="editName" placeholder="输入名称"></div><div class="editor-row"><label>网址 URL</label><input id="editUrl" placeholder="https://"></div><div class="editor-row"><label>分类</label><select id="editCat"></select></div><div class="editor-row"><label>描述</label><input id="editDesc" placeholder="简要描述"></div><div class="editor-row"><label>标签（逗号分隔）</label><input id="editTags" placeholder="标签1,标签2"></div><div class="editor-row"><label>徽章</label><select id="editBadge"><option value="">无</option><option value="hot">HOT</option><option value="new">NEW</option><option value="free">FREE</option><option value="cn">中文</option><option value="open">开源</option></select></div><div class="editor-actions"><button class="editor-btn secondary" onclick="addSite()">➕ 添加</button><button class="editor-btn primary" onclick="saveSite()">💾 保存</button><button class="editor-btn danger" onclick="deleteSite()">🗑 删除</button></div><div class="ie-block"><div class="editor-label">📦 数据管理</div><div class="ie-btns"><button class="editor-btn secondary" onclick="exportData()" style="flex:1">⬇️ 导出</button><button class="editor-btn secondary" onclick="document.getElementById('importFile').click()" style="flex:1">⬆️ 导入</button></div><input type="file" id="importFile" accept=".json" style="display:none" onchange="importData(this)"></div></div></div></div>
+
 <script src="data.js"></script>
 <script src="config.js"></script>
 <script src="main.js"></script>
