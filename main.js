@@ -257,11 +257,80 @@ function updateCounts() {
   });
 }
 
+// ── URL 地址信息（取代 'free' badge） ──
+// 根据 TLD + 协议返回 [国别, 协议] 标记数组
+function getUrlBadges(url) {
+  if (!url) return [];
+  const badges = [];
+  try {
+    const u = new URL(url);
+    const host = u.hostname.toLowerCase();
+    // 协议
+    if (u.protocol === 'https:') badges.push({code: '🔒', label: 'HTTPS'});
+    else if (u.protocol === 'http:') badges.push({code: '⚠', label: 'HTTP'});
+    // 国别（按 TLD）
+    const TLD_MAP = {
+      'cn':  {code: '🇨🇳', label: 'CN'},
+      'com.cn': {code: '🇨🇳', label: 'CN'},
+      'net.cn': {code: '🇨🇳', label: 'CN'},
+      'org.cn': {code: '🇨🇳', label: 'CN'},
+      'gov.cn': {code: '🇨🇳', label: 'CN'},
+      'jp':  {code: '🇯🇵', label: 'JP'},
+      'co.jp': {code: '🇯🇵', label: 'JP'},
+      'kr':  {code: '🇰🇷', label: 'KR'},
+      'tw':  {code: '🇹🇼', label: 'TW'},
+      'hk':  {code: '🇭🇰', label: 'HK'},
+      'uk':  {code: '🇬🇧', label: 'UK'},
+      'co.uk': {code: '🇬🇧', label: 'UK'},
+      'de':  {code: '🇩🇪', label: 'DE'},
+      'fr':  {code: '🇫🇷', label: 'FR'},
+      'it':  {code: '🇮🇹', label: 'IT'},
+      'es':  {code: '🇪🇸', label: 'ES'},
+      'ru':  {code: '🇷🇺', label: 'RU'},
+      'in':  {code: '🇮🇳', label: 'IN'},
+      'sg':  {code: '🇸🇬', label: 'SG'},
+      'au':  {code: '🇦🇺', label: 'AU'},
+      'ca':  {code: '🇨🇦', label: 'CA'},
+      'br':  {code: '🇧🇷', label: 'BR'},
+      'io':  {code: '🌐', label: 'IO'},
+      'ai':  {code: '🌐', label: 'AI'},
+      'co':  {code: '🌐', label: 'CO'},
+      'me':  {code: '🌐', label: 'ME'},
+      'tv':  {code: '🌐', label: 'TV'},
+      'xyz': {code: '🌐', label: 'XYZ'},
+      'top': {code: '🌐', label: 'TOP'},
+    };
+    // 提取 TLD（支持 .com.cn / .co.jp 等多级 TLD）
+    const parts = host.split('.');
+    let matched = null;
+    if (parts.length >= 2) {
+      const tld1 = parts[parts.length - 1];              // e.g. 'cn'
+      const tld2 = parts.slice(-2).join('.');            // e.g. 'com.cn'
+      const tld3 = parts.slice(-3).join('.');            // e.g. 'co.com.cn' (3-letter)
+      if (TLD_MAP[tld1])      matched = TLD_MAP[tld1];
+      else if (TLD_MAP[tld2]) matched = TLD_MAP[tld2];
+      else if (TLD_MAP[tld3]) matched = TLD_MAP[tld3];
+    }
+    if (matched) badges.push(matched);
+  } catch (e) {}
+  return badges;
+}
+
 // ── RENDER ─────────────────────────────────────────────
 function buildCard(s) {
   const isFav = favorites.has(s.url);
   const favBtn = `<button class="fav-btn ${isFav ? 'active' : ''}" onclick="toggleFav(event,'${s.url}')" title="${isFav ? '取消收藏' : '收藏'}">${isFav ? '★' : '☆'}</button>`;
-  const badge = s.badge ? `<span class="card-badge">${s.badge.toUpperCase()}</span>` : '';
+  // 站点语义 badge (hot/new/cn) + URL 地址信息 badge (国别+协议)
+  const semBadges = [];
+  if (s.badge && ['hot','new','cn','open'].includes(s.badge)) {
+    semBadges.push({code: s.badge.toUpperCase(), cls: 'sem-'+s.badge});
+  }
+  const urlBadges = getUrlBadges(s.url);
+  const allBadges = [...semBadges, ...urlBadges];
+  const badgeHtml = allBadges.map(b => {
+    if (b.cls) return `<span class="card-badge ${b.cls}">${b.code}</span>`;
+    return `<span class="card-badge url-badge" title="${b.label}">${b.code}</span>`;
+  }).join('');
   const tagHtml = (s.tags||[]).slice(0, 2).map(t => `<span class="ctag">${t}</span>`).join('');
   let host = '';
   try { host = new URL(s.url).hostname; } catch { }
@@ -277,7 +346,7 @@ function buildCard(s) {
         <div class="card-host">${host}</div>
         <div class="card-tags-row">${tagHtml}</div>
       </div>
-      ${badge}${favBtn}
+      ${badgeHtml}${favBtn}
     </div>
     ${s.desc ? `<div class="card-desc">${s.desc}</div>` : ''}
   </a>`;
@@ -362,11 +431,7 @@ function render() {
     // 全部模式下按子分类分组
     let bodyHtml = '';
     if (!state.sub && subTags.length) {
-      // 主组（不属任何 subTag 的）
-      const noSub = items.filter(s => !s.tags || !s.tags.some(t => subTags.some(([t2]) => t2 === t)));
-      if (noSub.length) {
-        bodyHtml += `<div class="sub-group"><div class="sub-group-hd">其他</div><div class="cards${lv}">${noSub.map(buildCard).join('')}</div></div>`;
-      }
+      // 不再单独显示「其他」杂项组（已移除，按用户要求）
       subTags.forEach(([t, c]) => {
         const groupItems = items.filter(s => (s.tags||[]).includes(t));
         if (!groupItems.length) return;

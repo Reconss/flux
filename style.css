@@ -307,10 +307,24 @@ button { font-family: inherit; cursor: pointer; }
 }
 
 .card-badge {
-  position: absolute; top: 8px; right: 8px;
+  position: absolute; top: 8px; right: 30px;
   font-size: 8px; font-weight: 700; padding: 2px 5px;
   border-radius: 4px; background: var(--a1); color: #fff;
+  letter-spacing: .3px; line-height: 1.1;
 }
+.card-badge.url-badge {
+  right: 8px; font-size: 10px; padding: 2px 5px;
+  background: rgba(255,255,255,.85); color: #1f2937;
+  border: 1px solid var(--border);
+  backdrop-filter: blur(4px);
+  box-shadow: 0 1px 3px rgba(0,0,0,.06);
+}
+.card-badge.sem-hot { background: #EF4444; }
+.card-badge.sem-new { background: #10B981; }
+.card-badge.sem-cn  { background: linear-gradient(135deg,#EF4444,#F59E0B); }
+.card-badge.sem-open{ background: #3B82F6; }
+/* 兼容旧 'free' 文本 badge */
+.card-badge.sem-free { background: #9ca3af; }
 .fav-btn {
   position: absolute; top: 8px; right: 8px;
   background: none; border: none;
