@@ -39,6 +39,8 @@ function applyConfig() {
   });
 }
 applyConfig();
+// 智能子标签增强（不覆盖已有 tag，仅添加）
+SITES.forEach(s => enrichTags(s));
 
 // ── URL 地址信息 badge（国别+协议） ──
 const TLD_MAP = {
@@ -327,9 +329,12 @@ function buildCard(s) {
   const ico    = faviconUrl(s.url);
   const semBadge = s.badge && BADGE_CFG[s.badge] ? `<span class="card-badge ${BADGE_CFG[s.badge][0]}">${BADGE_CFG[s.badge][1]}</span>` : '';
   const urlBadges = getUrlBadges(s.url);
-  const urlBadgeHtml = urlBadges.map(b => `<span class="card-badge b-url" title="${b}">${b}</span>`).join('');
+  // URL badge 移入 card-meta（host 行旁边），避开右上角 fav-btn
+  const urlBadgeHtml = urlBadges.map(b => `<span class="b-url-inline" title="${b}">${b}</span>`).join('');
   const tagHtml= s.tags?.length ? s.tags.map(t => `<span class="ctag">${t}</span>`).join('') : '';
   const isFav  = favorites.has(s.url);
+  // fav-btn 固定在右上角（top: 8px right: 8px）
+  // semantic badge 紧挨 fav-btn 左侧（top: 8px right: 36px）
   const favBtn = `<button class="fav-btn ${isFav ? 'active' : ''}" onclick="toggleFav(event,'${s.url}')" title="${isFav ? '取消收藏' : '收藏'}">${isFav ? '★' : '☆'}</button>`;
   const name_esc = s.name.replace(/'/g, "\\'");
   return `<a class="card" href="${s.url}" target="_blank" rel="noopener">
@@ -339,19 +344,68 @@ function buildCard(s) {
           onerror="faviconFallback('${name_esc}',this.parentNode)">` : ''}
       </div>
       <div class="card-meta">
-        <div class="card-name">${s.name}</div>
-        <div class="card-host">${hostOf(s.url)}</div>
+        <div class="card-meta-row1">
+          <span class="card-name">${s.name}</span>
+          ${semBadge ? `<span class="sem-inline ${BADGE_CFG[s.badge][0]}">${BADGE_CFG[s.badge][1]}</span>` : ''}
+        </div>
+        <div class="card-meta-row2">
+          <span class="card-host">${hostOf(s.url)}</span>
+          ${urlBadgeHtml ? `<span class="url-badges">${urlBadgeHtml}</span>` : ''}
+        </div>
         <div class="card-tags-row">${tagHtml}</div>
       </div>
-      ${semBadge}${urlBadgeHtml}${favBtn}
+      ${favBtn}
     </div>
     <div class="card-desc">${s.desc || ''}</div>
   </a>`;
 }
 
+// ── 智能子标签生成（基于 URL/name 启发式） ──
+function enrichTags(site) {
+  if (!site.tags) site.tags = [];
+  const url = (site.url || '').toLowerCase();
+  const name = site.name || '';
+  // 国漫/日漫/美漫/韩漫（适用于 anime/manga 类）
+  const isAnime = site.tags.includes('动漫') || site.tags.includes('漫画')
+    || /manga|anime|dongman|manhua/.test(url);
+  if (isAnime) {
+    if (/国|国创|国产|国漫/.test(name)
+        || /guoman|guochuang|dmzj|sfacg|bilibili/.test(url)
+        || /dm5\.com|manben\.com|gufengmh\.com/.test(url)) {
+      if (!site.tags.includes('国漫')) site.tags.push('国漫');
+    } else if (/日|日漫|日本/.test(name)
+        || /anime1|dmhyy|jciyuan|ezdmw|fanchawu|ikan/.test(url)) {
+      if (!site.tags.includes('日漫')) site.tags.push('日漫');
+    } else if (/美|美漫|欧美/.test(name)
+        || /webtoons|mangadex|komiic|mangakakalot|mangaowl/.test(url)) {
+      if (!site.tags.includes('美漫')) site.tags.push('美漫');
+    } else if (/韩|韩漫|韩国/.test(name) || /webtoon|naver/.test(url)) {
+      if (!site.tags.includes('韩漫')) site.tags.push('韩漫');
+    }
+  }
+  // 网页版/APP 平台类型（适用于所有类）
+  const cleanedUrl = url.replace(/^https?:\/\//, '');
+  const isMobile = /^m\./.test(cleanedUrl) || /\/(m|app|h5)(\/|$|\?)/.test('/' + cleanedUrl)
+                  || /\.apk(\?|$)/.test(cleanedUrl) || /app\./.test(cleanedUrl);
+  if (isMobile) {
+    if (!site.tags.includes('APP') && !site.tags.includes('移动版')) site.tags.push('APP');
+  } else {
+    if (!site.tags.includes('APP') && !site.tags.includes('网页版') && !site.tags.includes('移动版')) {
+      site.tags.push('网页版');
+    }
+  }
+  return site;
+}
+
 function getTagsForCat(cat) {
+  // 平台型 tag（网页版/APP/移动版）不显示在子分类 tab 上（信息量太低）
+  // 但仍保留在卡片的 tag chip 中
+  const PLATFORM_TAGS = new Set(['网页版', 'APP', '移动版']);
   const seen = new Set(), out = [];
-  SITES.filter(s => s.cat === cat).forEach(s => (s.tags || []).forEach(t => { if (!seen.has(t)) { seen.add(t); out.push(t); } }));
+  SITES.filter(s => s.cat === cat).forEach(s => (s.tags || []).forEach(t => {
+    if (PLATFORM_TAGS.has(t)) return;
+    if (!seen.has(t)) { seen.add(t); out.push(t); }
+  }));
   return out;
 }
 
