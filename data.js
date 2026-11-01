@@ -143,7 +143,7 @@ const SITES = [
   {id:'ani-pekolove-net',name:'Ani动漫',url:'https://ani.pekolove.net',desc:'动漫在线观看站，资源覆盖广。',badge:'free'},
   {id:'trace-moe',name:'Trace.moe',url:'https://trace.moe',desc:'通过截图反向搜索动漫来源，精准定位番剧集数。',badge:'free'},
   {id:'dm84-net',name:'动漫巴士',url:'https://dm84.net/',desc:'主打动漫在线观看，备用域名dm84.vip/dm84.pro，发布页dmbus.cc。',badge:'free'},
-  {id:'mifun-tv',name:'MiFun',url:'https://mifun.tv/',desc:'动漫视频App，官网www.huai-de.com，开发方贵阳混鑫科技有限公司。',badge:'free'},
+  {id:'mifun-tv',name:'MiFun',url:'https://ios.mifun.org/',desc:'动漫番剧在线观看（iOS 端）。',badge:'free'},
   {id:'ymvid-com',name:'粤漫之家',url:'https://www.ymvid.com/',desc:'主打粤语配音动漫的App，粤语动漫资源丰富。',badge:'free'},
   {id:'fsdm02-com',name:'番薯动漫',url:'https://www.fsdm02.com',desc:'备用域名fsdm01.com/fanshudm.cc/fanshudm.com，发布页fsdm.top。',badge:'free'},
   {id:'cycdm01-top',name:'次元城动画',url:'https://www.cycdm01.top/',desc:'动漫在线观看网站。',badge:'free'},

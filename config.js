@@ -165,7 +165,7 @@ const CONFIG = {
     'https://mao.souldebug.com': {cat:'media', tags:['网盘搜索']},
     'https://medium.com': {cat:'intl', tags:['英语社区']},
     'https://mhx12.com/': {cat:'read', tags:['漫画'], name:'漫自由'},
-    'https://mifun.tv/': {cat:'media', tags:['动漫']},
+    'https://ios.mifun.org/': {cat:'media', tags:['动漫']},
     'https://mikanime.tv': {cat:'media', tags:['动漫']},
     'https://msmy.cn': {cat:'media', tags:['网盘搜索']},
     'https://music.163.com': {cat:'audio', tags:['音乐平台']},
