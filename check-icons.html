@@ -1,0 +1,200 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>图标体检 · Navigation</title>
+<style>
+  :root{
+    --bg:#0d1018; --surface:#171b27; --surface2:#1f2433; --surface3:#262c3d;
+    --border:rgba(255,255,255,.08); --border-h:rgba(255,255,255,.16);
+    --text:#e9ecf3; --text-m:#aab2c5; --text-d:#7a8499;
+    --accent:#6366f1; --accent2:#a855f7; --ok:#34d399; --bad:#fb7185; --warn:#fbbf24;
+  }
+  *{box-sizing:border-box}
+  body{margin:0;background:
+      radial-gradient(900px 500px at 12% -8%, rgba(99,102,241,.18), transparent 60%),
+      radial-gradient(800px 480px at 92% 0%, rgba(168,85,247,.14), transparent 55%),
+      var(--bg);
+    color:var(--text); font-family:-apple-system,BlinkMacSystemFont,'PingFang SC','Microsoft YaHei',system-ui,sans-serif;
+    min-height:100vh; padding:28px 18px 60px; line-height:1.6;}
+  .wrap{max-width:920px;margin:0 auto}
+  h1{font-size:22px;margin:0 0 4px;display:flex;align-items:center;gap:10px}
+  h1 .dot{width:11px;height:11px;border-radius:50%;background:linear-gradient(135deg,var(--accent),var(--accent2))}
+  .sub{color:var(--text-m);font-size:13px;margin:0 0 22px}
+  .card{background:var(--surface);border:1px solid var(--border);border-radius:16px;padding:18px 18px;margin-bottom:16px;
+    box-shadow:0 10px 30px rgba(0,0,0,.25)}
+  .stats{display:flex;gap:14px;flex-wrap:wrap;margin-bottom:14px}
+  .stat{flex:1;min-width:120px;background:var(--surface2);border:1px solid var(--border);border-radius:12px;padding:12px 14px}
+  .stat .n{font-size:26px;font-weight:800;line-height:1.1}
+  .stat .l{font-size:12px;color:var(--text-m)}
+  .stat.ok .n{color:var(--ok)} .stat.bad .n{color:var(--bad)}
+  .bar{height:9px;border-radius:6px;background:var(--surface3);overflow:hidden;margin:6px 0 4px}
+  .bar > i{display:block;height:100%;width:0;background:linear-gradient(90deg,var(--accent),var(--accent2));transition:width .15s}
+  .row{display:flex;gap:10px;align-items:center;flex-wrap:wrap;margin-bottom:12px}
+  input[type=text]{flex:1;min-width:200px;background:var(--surface2);border:1px solid var(--border);color:var(--text);
+    border-radius:10px;padding:9px 12px;font-size:14px;outline:none}
+  input[type=text]:focus{border-color:var(--accent)}
+  button{background:var(--surface2);border:1px solid var(--border);color:var(--text);border-radius:10px;
+    padding:9px 14px;font-size:13px;cursor:pointer;transition:.15s}
+  button:hover{border-color:var(--border-h);background:var(--surface3)}
+  button.primary{background:linear-gradient(135deg,var(--accent),var(--accent2));border:none;color:#fff;font-weight:600}
+  .progress{color:var(--text-m);font-size:13px;margin:2px 0 14px}
+  table{width:100%;border-collapse:collapse;font-size:13px}
+  th,td{text-align:left;padding:8px 10px;border-bottom:1px solid var(--border);vertical-align:top}
+  th{color:var(--text-m);font-weight:600;font-size:12px;position:sticky;top:0;background:var(--surface)}
+  td a{color:var(--accent);text-decoration:none} td a:hover{text-decoration:underline}
+  .name{font-weight:600;color:var(--text)}
+  .src{color:var(--text-m);font-size:11px;word-break:break-all}
+  .badge-bad{display:inline-block;font-size:10px;padding:1px 6px;border-radius:8px;background:rgba(251,113,133,.15);color:var(--bad);border:1px solid rgba(251,113,133,.3)}
+  .empty{color:var(--text-m);text-align:center;padding:30px}
+  .note{font-size:12px;color:var(--text-m);margin-top:10px}
+  .note code{background:var(--surface2);padding:2px 6px;border-radius:6px;color:var(--text)}
+  .scroll{max-height:520px;overflow:auto;border:1px solid var(--border);border-radius:12px}
+</style>
+</head>
+<body>
+<div class="wrap">
+  <h1><span class="dot"></span>图标体检 · Navigation</h1>
+  <p class="sub">在浏览器中逐站实测「站点根 favicon → DuckDuckGo → Clearbit」三级图标源，列出所有取不到图标（会显示默认地球）的站点。</p>
+
+  <div class="card">
+    <div class="stats">
+      <div class="stat"><div class="n" id="total">—</div><div class="l">站点总数</div></div>
+      <div class="stat ok"><div class="n" id="ok">—</div><div class="l">有图标</div></div>
+      <div class="stat bad"><div class="n" id="bad">—</div><div class="l">无图标（地球）</div></div>
+    </div>
+    <div class="bar"><i id="bar"></i></div>
+    <div class="progress" id="progress">准备中…</div>
+
+    <div class="row">
+      <input type="text" id="filter" placeholder="按名称 / 网址 / id 过滤无图标清单…" oninput="applyFilter()">
+      <button class="primary" onclick="start()">重新检测</button>
+      <button onclick="exportJSON()">导出 JSON</button>
+      <button onclick="copyList()">复制名称</button>
+    </div>
+
+    <div class="scroll">
+      <table>
+        <thead><tr><th style="width:34px">#</th><th>站点</th><th>网址</th><th>失败源</th></tr></thead>
+        <tbody id="tbody"><tr><td colspan="4" class="empty">点击「重新检测」开始…</td></tr></tbody>
+      </table>
+    </div>
+    <p class="note">提示：检测在你的浏览器中发起真实网络请求，请保持联网。失败源显示该站点三种图标源全部 404 / 超时。<br>
+    拿到清单后，可在你本机终端运行 <code>node tools/fetch-icons.mjs</code> 把能取到的图标缓存到本地 <code>icons/</code>；仍失败的站点可手动在 <code>data.js</code> 加 <code>img:'…'</code> 指定图标。</p>
+  </div>
+</div>
+
+<script src="data.js"></script>
+<script>
+  // SITES 来自 data.js（classic script，顶层 const 在全局词法环境可被本脚本引用）
+  const ALL = (typeof SITES !== 'undefined') ? SITES : [];
+
+  function sourcesFor(s){
+    if (s && s.img) return [s.img];
+    try{
+      const h = new URL(s.url).hostname;
+      return [
+        `https://${h}/favicon.ico`,
+        `https://www.google.com/s2/favicons?domain=${h}&sz=128`,
+        `https://icons.duckduckgo.com/ip3/${h}.ico`,
+        `https://logo.clearbit.com/${h}`,
+        `https://www.bing.com/favicon.ico?url=${h}`
+      ];
+    }catch(e){ return []; }
+  }
+
+  const CONCURRENCY = 18;
+  const PER_SRC_TIMEOUT = 4500;
+  let missing = [];      // {id,name,url,sources}
+  let running = false;
+
+  function testOne(s){
+    return new Promise(resolve=>{
+      const srcs = sourcesFor(s);
+      let i = 0;
+      const tryNext = ()=>{
+        if(i >= srcs.length){ resolve({site:s, ok:false}); return; }
+        const u = srcs[i++];
+        const img = new Image();
+        let settled = false;
+        const to = setTimeout(()=>{
+          if(settled) return; settled = true; img.src=''; tryNext();
+        }, PER_SRC_TIMEOUT);
+        img.onload = ()=>{ if(settled) return; settled=true; clearTimeout(to); resolve({site:s, ok:true}); };
+        img.onerror = ()=>{ if(settled) return; settled=true; clearTimeout(to); tryNext(); };
+        img.src = u;
+      };
+      tryNext();
+    });
+  }
+
+  async function start(){
+    if(running) return;
+    running = true; missing = [];
+    document.getElementById('progress').textContent = '检测中…';
+    document.getElementById('total').textContent = ALL.length;
+    document.getElementById('ok').textContent = '0';
+    document.getElementById('bad').textContent = '0';
+    document.getElementById('bar').style.width = '0%';
+    document.getElementById('tbody').innerHTML = '<tr><td colspan="4" class="empty">检测中…</td></tr>';
+
+    let done = 0, okCount = 0;
+    const queue = ALL.slice();
+    const worker = async ()=>{
+      while(queue.length){
+        const s = queue.shift();
+        const r = await testOne(s);
+        done++;
+        if(r.ok){ okCount++; }
+        else { missing.push({ id:s.id, name:s.name, url:s.url, sources:sourcesFor(s) }); }
+        document.getElementById('ok').textContent = okCount;
+        document.getElementById('bad').textContent = missing.length;
+        document.getElementById('bar').style.width = (done/ALL.length*100).toFixed(1) + '%';
+        document.getElementById('progress').textContent = `进度 ${done}/${ALL.length} · 有图标 ${okCount} · 无图标 ${missing.length}`;
+      }
+    };
+    await Promise.all(Array.from({length:Math.min(CONCURRENCY, ALL.length)}, worker));
+    running = false;
+    document.getElementById('progress').textContent = `完成：${ALL.length} 个站点，有图标 ${okCount}，无图标 ${missing.length}`;
+    renderTable();
+  }
+
+  function filtered(){
+    const q = (document.getElementById('filter').value||'').trim().toLowerCase();
+    if(!q) return missing;
+    return missing.filter(m =>
+      (m.name||'').toLowerCase().includes(q) ||
+      (m.url||'').toLowerCase().includes(q) ||
+      (m.id||'').toLowerCase().includes(q));
+  }
+  function renderTable(){
+    const list = filtered();
+    const tb = document.getElementById('tbody');
+    if(!list.length){ tb.innerHTML = '<tr><td colspan="4" class="empty">🎉 没有缺失图标的站点</td></tr>'; return; }
+    tb.innerHTML = list.map((m,idx)=>`
+      <tr>
+        <td>${idx+1}</td>
+        <td class="name">${escapeHtml(m.name||m.id)}<br><span class="badge-bad">无图标</span></td>
+        <td><a href="${escapeAttr(m.url)}" target="_blank" rel="noopener">${escapeHtml(m.url)}</a></td>
+        <td class="src">${m.sources.map(escapeHtml).join('<br>')}</td>
+      </tr>`).join('');
+  }
+  function applyFilter(){ if(!running) renderTable(); }
+  function escapeHtml(s){ return (s||'').replace(/[&<>"]/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c])); }
+  function escapeAttr(s){ return escapeHtml(s).replace(/'/g,'&#39;'); }
+  function exportJSON(){
+    const blob = new Blob([JSON.stringify(missing,null,2)],{type:'application/json'});
+    const a = document.createElement('a'); a.href = URL.createObjectURL(blob);
+    a.download = 'missing-icons.json'; a.click();
+  }
+  function copyList(){
+    const txt = missing.map(m=>`${m.name}\t${m.url}`).join('\n');
+    navigator.clipboard.writeText(txt).then(()=>{ alert('已复制 '+missing.length+' 个站点名称到剪贴板'); });
+  }
+
+  // 自动开始
+  window.addEventListener('DOMContentLoaded', ()=>{ if(ALL.length) start(); });
+</script>
+</body>
+</html>

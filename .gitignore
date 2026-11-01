@@ -1,0 +1,9 @@
+.DS_Store
+*.bak
+*.bak2
+*.bak.clean
+*.bak.preicon
+*.bak.beforefill
+.workbuddy/
+node_modules/
+.well-known/
