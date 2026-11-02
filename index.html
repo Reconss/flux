@@ -243,6 +243,38 @@
   </div>
 </div>
 
+<!-- ══ SITE PREVIEW MODAL ═══════════════════════════════ -->
+<div class="preview-modal" id="previewModal" role="dialog" aria-modal="true" aria-labelledby="previewTitle">
+  <div class="preview-box">
+    <div class="preview-header">
+      <div class="preview-title-wrap">
+        <span class="preview-ico" id="previewIco"></span>
+        <div class="preview-title-body">
+          <span class="preview-title" id="previewTitle">站点预览</span>
+          <span class="preview-url" id="previewUrl"></span>
+        </div>
+      </div>
+      <div class="preview-actions">
+        <button class="preview-btn" id="previewOpenBtn" onclick="openPreviewInNewTab()">↗ 新标签打开</button>
+        <button class="preview-btn ghost" onclick="togglePreviewIframe()" id="previewToggleBtn">🖥 内嵌预览</button>
+        <button class="preview-btn close" onclick="closePreview()" aria-label="关闭">✕</button>
+      </div>
+    </div>
+    <div class="preview-body">
+      <div class="preview-placeholder" id="previewPlaceholder">
+        <div class="ph-icon">🌐</div>
+        <p class="ph-text">即将前往该站点</p>
+        <p class="ph-sub" id="previewDesc"></p>
+        <div class="ph-actions">
+          <button class="ph-btn primary" onclick="openPreviewInNewTab()">立即访问</button>
+          <button class="ph-btn" onclick="togglePreviewIframe()">内嵌预览</button>
+        </div>
+      </div>
+      <iframe class="preview-iframe" id="previewIframe" title="站点预览" sandbox="allow-scripts allow-same-origin allow-forms allow-popups" referrerpolicy="no-referrer"></iframe>
+    </div>
+  </div>
+</div>
+
 <script src="data.js"></script>
 <script src="config.js"></script>
 <script src="main.js"></script>

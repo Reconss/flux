@@ -470,7 +470,7 @@ function buildCard(s) {
   // semantic badge 紧挨 fav-btn 左侧（top: 8px right: 36px）
   const favBtn = `<button class="fav-btn ${isFav ? 'active' : ''}" onclick="toggleFav(event,'${s.url}')" title="${isFav ? '取消收藏' : '收藏'}">${isFav ? '★' : '☆'}</button>`;
   const name_esc = s.name.replace(/'/g, "\\'");
-  return `<a class="card" href="${s.url}" target="_blank" rel="noopener">
+  return `<a class="card" href="${s.url}" target="_blank" rel="noopener" onclick="openPreview(event,'${s.url}')">
     <div class="card-top">
       <div class="card-ico" id="ico-${btoa(s.url).replace(/[^a-zA-Z0-9]/g,'')}">
         ${ico ? `<img src="${ico}" alt="" loading="lazy" data-sources="${srcs.join('|')}" onerror="faviconFail(this)">` : ''}
@@ -494,6 +494,88 @@ function buildCard(s) {
     </span>
   </a>`;
 }
+
+// ── 站点预览弹层（点击卡片时显示，可选择新标签或内嵌 iframe） ──
+let previewSite = null;
+let previewLastFocus = null;
+let iframeVisible = false;
+
+function openPreview(e, url) {
+  if (e.metaKey || e.ctrlKey || e.shiftKey || e.button === 1) return;  // 保留浏览器默认新窗口行为
+  e.preventDefault();
+  const site = SITES.find(s => s.url === url);
+  if (!site) { window.open(url, '_blank', 'noopener'); return; }
+  previewSite = site;
+  iframeVisible = false;
+  previewLastFocus = document.activeElement;
+
+  const modal = document.getElementById('previewModal');
+  document.getElementById('previewTitle').textContent = site.name || hostOf(site.url);
+  document.getElementById('previewUrl').textContent = site.url;
+  document.getElementById('previewDesc').textContent = descOf(site);
+  const icoEl = document.getElementById('previewIco');
+  const srcs = faviconSources(site);
+  icoEl.innerHTML = srcs[0]
+    ? `<img src="${srcs[0]}" alt="" data-sources="${srcs.join('|')}" onerror="faviconFail(this)">`
+    : '';
+  document.getElementById('previewIframe').src = 'about:blank';
+  document.getElementById('previewToggleBtn').textContent = '🖥 内嵌预览';
+  document.getElementById('previewPlaceholder').style.display = 'flex';
+  document.getElementById('previewIframe').classList.remove('active');
+
+  modal.classList.add('open');
+  document.body.classList.add('modal-open');
+  setTimeout(() => document.getElementById('previewOpenBtn').focus(), 60);
+}
+
+function togglePreviewIframe() {
+  if (!previewSite) return;
+  iframeVisible = !iframeVisible;
+  const iframe = document.getElementById('previewIframe');
+  const placeholder = document.getElementById('previewPlaceholder');
+  if (iframeVisible) {
+    iframe.src = previewSite.url;
+    iframe.classList.add('active');
+    placeholder.style.display = 'none';
+    document.getElementById('previewToggleBtn').textContent = '⤴ 返回详情';
+  } else {
+    iframe.src = 'about:blank';
+    iframe.classList.remove('active');
+    placeholder.style.display = 'flex';
+    document.getElementById('previewToggleBtn').textContent = '🖥 内嵌预览';
+  }
+}
+
+function openPreviewInNewTab() {
+  if (previewSite) window.open(previewSite.url, '_blank', 'noopener');
+}
+
+function closePreview() {
+  const modal = document.getElementById('previewModal');
+  modal.classList.remove('open');
+  document.body.classList.remove('modal-open');
+  document.getElementById('previewIframe').src = 'about:blank';
+  previewSite = null;
+  if (previewLastFocus && previewLastFocus.focus) previewLastFocus.focus();
+  previewLastFocus = null;
+}
+
+// 遮罩点击关闭 + ESC 关闭 + Tab 焦点陷阱
+(function bindPreviewChrome() {
+  const p = document.getElementById('previewModal');
+  if (!p) return;
+  p.addEventListener('click', e => { if (e.target === e.currentTarget) closePreview(); });
+  document.addEventListener('keydown', e => {
+    if (e.key === 'Escape') { if (p.classList.contains('open')) closePreview(); return; }
+    if (e.key !== 'Tab' || !p.classList.contains('open')) return;
+    const box = p.querySelector('.preview-box');
+    const f = box.querySelectorAll('a[href],button:not([disabled]),input:not([disabled]),select:not([disabled]),textarea,[tabindex]:not([tabindex="-1"])');
+    if (!f.length) return;
+    const first = f[0], last = f[f.length - 1];
+    if (e.shiftKey && document.activeElement === first) { e.preventDefault(); last.focus(); }
+    else if (!e.shiftKey && document.activeElement === last) { e.preventDefault(); first.focus(); }
+  });
+})();
 
 // ── 智能子标签生成（基于 URL/name 启发式） ──
 function enrichTags(site) {
