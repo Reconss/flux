@@ -735,3 +735,19 @@ body.modal-open { overflow: hidden; }
 }
 .tag-strip-more:hover { color: var(--teal-deep); }
 [data-theme="dark"] .tag-strip-more:hover { color: var(--teal); }
+
+/* ── Site Footer ── */
+.site-footer {
+  margin-top: 36px;
+  padding: 26px 40px 34px;
+  border-top: 1px solid var(--border);
+  background: var(--surface);
+}
+.footer-inner { max-width: 1180px; margin: 0 auto; }
+.footer-brand { display:flex; align-items:center; gap:8px; margin-bottom:10px; }
+.footer-logo { font-size:18px; }
+.footer-name { font-weight:700; font-size:15px; color:var(--text); letter-spacing:-.2px; }
+.footer-tagline { font-size:12.5px; color:var(--text-m); margin-left:4px; }
+.footer-desc { font-size:12.5px; line-height:1.8; color:var(--text-m); margin:0 0 6px; max-width:640px; }
+.footer-meta { font-size:11.5px; color:var(--text-d); margin:0; line-height:1.7; }
+.footer-meta span { margin: 0 4px; }
