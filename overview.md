@@ -27,3 +27,62 @@
 
 ## 可选后续
 本机有网时运行 `node tools/fetch-icons.mjs` 可再补齐剩余站点的真实图标。
+
+---
+
+# 安全跳转页（go.html）— 重新设计
+
+## 背景
+原先点击卡片弹出的是**简易预览弹层**（新标签 / iframe / ESC 关闭）。问题：
+- 弹层结构简陋，视觉上就是一个遮罩 + 空 iframe
+- 没有任何广告承载位，后续无法变现
+- iframe 被目标站 `X-Frame-Options` 拦截时是空白框，体验割裂
+
+## 方案：独立跳转页
+废弃弹层，改为**独立页面 `go.html`**，卡片点击进入该页，页面完成倒计时后自动跳转目标站。
+
+### 页面结构（`go.html` + `go.css` + `go.js`）
+| 区块 | 说明 |
+|---|---|
+| 顶部横幅广告位 | `ad-top`，970×90 / 移动端 320×100 |
+| 主卡片 | 站点图标 + 名称 + 域名 + 徽章 + 描述 + 标签 |
+| 安全提示条 | 离开前提醒，不承担信任背书 |
+| 操作区 | 立即前往 / 暂停倒计时 / 复制链接 |
+| 倒计时环 | SVG 圆环进度，8 秒自动跳转 |
+| 右侧广告位 | `ad-side`，300×250 |
+| 相似推荐 | 同分类站点，可继续跳转 |
+| 信息流广告位 | `ad-native`，自适应 |
+| 推荐网格 | 8 个热门站点 + 分类快捷 chip |
+| 移动端底部广告 | `ad-mobile`，320×50 / 320×100，可关闭 |
+
+### 广告位配置
+统一在 `go.html` 顶部的 `window.GO_ADS` 中配置：
+
+```js
+window.GO_ADS = {
+  client: 'ca-pub-5282340125650399',
+  slots:   { top: '', side: '', native: '', mobile: '' },  // AdSense slot id
+  custom:  { top: '', side: '', native: '', mobile: '' }   // 任意 HTML 片段（联盟/直客）
+};
+```
+
+- `slots` 填 slot id → 走 AdSense
+- `custom` 填 HTML → 走自建/联盟广告，优先级更高
+- 两者都空 → 广告位自动隐藏，不占版面
+- 预览布局：网址后加 `?adtest=1`，显示灰色斜纹占位
+
+### 跳转行为
+- `window.GO_PAGE.countdown` 控制倒计时秒数（默认 8），设为 `0` 则只显示按钮不自动跳
+- 目标地址通过 `?u=<encoded url>` 传入；也兼容 `?id=<site id>`
+- 仅接受 `http/https` 协议，其余（`javascript:` 等）判定为无效链接并展示兜底页
+- 键盘：`Enter` 立即跳转，`空格` 暂停/继续
+
+### 接入改动
+- `main.js` → 新增 `goUrl(url)`，`buildCard` / 精选卡 / 精选位三类链接统一改为 `go.html?u=...`
+- 删除 `openPreview` / `togglePreviewIframe` / `openPreviewInNewTab` / `closePreview` / `bindPreviewChrome` 及对应 HTML、CSS
+- `robots.txt` 增加 `Disallow: /go.html`（跳转页 `noindex`，不进入索引）
+
+## 验证
+- `node --check main.js go.js data.js config.js` 全部通过
+- 桌面 1440 / 移动 390 / 暗色主题截图确认无溢出与错位
+- 首页点击卡片 → 跳转页显示正确站点名；非法协议显示无效态

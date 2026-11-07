@@ -1,4 +1,5 @@
 User-agent: *
 Allow: /
+Disallow: /go.html
 
 Sitemap: https://flux-flaxen.vercel.app/sitemap.xml
