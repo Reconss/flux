@@ -122,10 +122,10 @@ window.GO_PAGE = {
     </div>
 
     <div class="go-actions">
-      <button class="btn-main" id="goNow" type="button">
+      <a class="btn-main" id="goNow" href="#" target="_blank" rel="noopener nofollow">
         <span id="goNowLabel">立即前往</span>
         <svg class="btn-arrow" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14M13 6l6 6-6 6"/></svg>
-      </button>
+      </a>
       <button class="btn-ghost" id="pauseBtn" type="button">暂停自动跳转</button>
       <button class="btn-square" id="copyBtn" type="button" title="复制目标链接" aria-label="复制目标链接">
         <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round"><rect x="9" y="9" width="11" height="11" rx="2.2"/><path d="M5.5 15.5H5a1.5 1.5 0 01-1.5-1.5V5A1.5 1.5 0 015 3.5h9A1.5 1.5 0 0115.5 5v.5"/></svg>
@@ -213,6 +213,28 @@ window.GO_PAGE = {
 
 <div class="toast" id="toast" role="status" aria-live="polite"></div>
 
+<!-- 极简兜底：即使 go.js 加载失败，主按钮依然是可用链接 -->
+<script>
+(function(){
+  var p = new URLSearchParams(location.search);
+  var u = p.get('u') || p.get('url') || '';
+  try { u = decodeURIComponent(u); } catch(e) {}
+  if (!u) return;
+  var ok = false;
+  try { ok = /^https?:\/\//i.test(u); } catch(e) {}
+  if (!ok) return;
+  var a = document.getElementById('goNow');
+  if (a) { a.setAttribute('href', u); a.setAttribute('target', '_blank'); }
+  // 站点名兜底（go.js 未运行时至少显示域名，而不是一直停在“正在加载…”）
+  var n = document.getElementById('siteName');
+  var h = document.getElementById('siteHost');
+  try {
+    var host = new URL(u).hostname.replace(/^www\./, '');
+    if (n && n.textContent.indexOf('正在加载') === 0) n.textContent = host;
+    if (h) h.textContent = host;
+  } catch(e) {}
+})();
+</script>
 <script src="data.js" defer></script>
 <script src="config.js" defer></script>
 <script src="go.js" defer></script>

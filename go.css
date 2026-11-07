@@ -314,6 +314,20 @@ button { font-family: var(--sans); }
 .btn-main:active { transform: translateY(0); }
 .btn-arrow { transition: transform .18s; }
 .btn-main:hover .btn-arrow { transform: translateX(3px); }
+/* 跳转中 */
+.btn-main.busy { pointer-events: none; opacity: .82; }
+.btn-main.busy .btn-arrow { animation: arrowNudge .7s ease-in-out infinite; }
+/* 兜底态：自动跳转被拦截 */
+.btn-main.fallback {
+  background: linear-gradient(135deg, #ea580c, #f97316);
+  box-shadow: 0 10px 26px rgba(234,88,12,.32);
+}
+.btn-main.fallback:hover { box-shadow: 0 14px 32px rgba(234,88,12,.4); }
+
+@keyframes arrowNudge {
+  0%, 100% { transform: translateX(0); opacity: 1; }
+  50% { transform: translateX(4px); opacity: .5; }
+}
 
 .btn-ghost {
   padding: 13px 18px; border-radius: 12px;

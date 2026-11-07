@@ -246,6 +246,8 @@
 
   // ── 倒计时 / 跳转 ──
   const RING_LEN = 2 * Math.PI * 19;
+  const PAGE_HREF = location.href;
+  let jumpLock = false;
 
   function updateTimerUI() {
     const total = Math.max(1, Number(window.GO_PAGE && window.GO_PAGE.countdown) || 8);
@@ -288,7 +290,42 @@
   function goNow() {
     if (!site) return;
     clearInterval(timer);
-    location.href = site.url;
+
+    // 兜底态：自动跳转被拦截过 → 改为新标签打开
+    if (jumpLock === 'fallback') {
+      window.open(site.url, '_blank', 'noopener');
+      return;
+    }
+    // 跳转中：防止重复点击
+    if (jumpLock) return;
+    jumpLock = true;
+    $('goNow').classList.add('busy');
+    $('goNowLabel').textContent = '正在前往…';
+    $('timerText').textContent = '正在跳转…';
+
+    const target = site.url;
+    let jumped = false;
+    // 侦测跳转是否真的发生（部分浏览器/网络会静默失败）
+    window.addEventListener('pagehide', () => { jumped = true; }, { once: true });
+    window.addEventListener('beforeunload', () => { jumped = true; }, { once: true });
+
+    // 主跳转
+    try {
+      location.href = target;
+    } catch (e) {
+      try { window.open(target, '_blank', 'noopener'); } catch (e2) { /* 忽略，走下方兜底 */ }
+    }
+
+    // 兜底：若 2.5 秒后仍在当前页（跳转被拦截），给出新窗口方案
+    setTimeout(() => {
+      if (jumped || location.href !== PAGE_HREF) return;
+      jumpLock = 'fallback';
+      $('goNow').classList.remove('busy');
+      $('goNow').classList.add('fallback');
+      $('goNowLabel').textContent = '在新标签打开';
+      $('timerText').textContent = '自动跳转被拦截，请点击按钮打开';
+      $('timerSub').textContent = '部分浏览器或网络环境会限制自动跳转';
+    }, 2500);
   }
 
   function togglePause() {
@@ -433,7 +470,17 @@
     renderMore();
     startCountdown();
 
-    $('goNow').addEventListener('click', goNow);
+    // 主按钮是真链接（脚本失效也能点通），JS 只负责增强：阻止默认 + 受控跳转
+    const goBtn = $('goNow');
+    goBtn.setAttribute('href', site.url);
+    goBtn.setAttribute('target', '_blank');
+    goBtn.setAttribute('rel', 'noopener nofollow');
+    goBtn.addEventListener('click', e => {
+      // 兜底态：让浏览器原生行为接管（target=_blank 新标签打开）
+      if (jumpLock === 'fallback') return;
+      e.preventDefault();
+      goNow();
+    });
     $('pauseBtn').addEventListener('click', togglePause);
     $('copyBtn').addEventListener('click', copyLink);
 
