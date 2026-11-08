@@ -50,6 +50,13 @@ window.GO_PAGE = {
 };
 </script>
 <link rel="stylesheet" href="go.css">
+<noscript>
+  <style>
+    /* 无 JS 环境：隐藏依赖脚本的部分，主按钮为真链接仍可手动前往 */
+    .go-timer, .go-side, .more-shell, .ad-mobile-wrap { display: none !important; }
+    #siteName::after { content: '（当前浏览器禁用了脚本，请点击「立即前往」手动访问）'; display: block; font-size: 12px; color: #5c6080; font-weight: 400; margin-top: 6px; }
+  </style>
+</noscript>
 </head>
 <body>
 <div class="mesh" aria-hidden="true"></div>

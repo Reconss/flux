@@ -347,6 +347,8 @@ button { font-family: var(--sans); }
   transition: background .16s, border-color .16s, color .16s;
 }
 .btn-square:hover { background: var(--surface2); border-color: var(--border-h); color: var(--text); }
+.btn-square.copied { color: var(--teal-deep); border-color: var(--teal-line); background: var(--teal-soft); }
+[data-theme="dark"] .btn-square.copied { color: var(--teal); }
 
 /* ── TIMER ── */
 .go-timer {
@@ -385,6 +387,9 @@ button { font-family: var(--sans); }
 .back-link:hover { color: var(--text); border-color: var(--border-h); background: var(--surface3); }
 .go-timer.paused .ring-fill { stroke: var(--text-d); }
 .go-timer.paused .ring { animation: none; }
+/* 最后 3 秒紧迫感：数字变橙红 + 圆环同色 */
+.go-timer.urgent .ring-fill { stroke: #f97316; }
+.go-timer.urgent .ring b { color: #ea580c; }
 
 /* ── SIDE ── */
 .go-side { display: flex; flex-direction: column; gap: 16px; min-width: 0; }

@@ -232,6 +232,11 @@
     ).join('');
 
     const pool = SITES.filter(s => s.url !== (site && site.url) && /^https?:\/\//.test(s.url) && (!recCat || s.cat === recCat));
+    // 洗牌取 8 个：每次进入页面推荐都不同，而不是固定前 8 个
+    for (let i = pool.length - 1; i > 0; i--) {
+      const j = Math.floor(Math.random() * (i + 1));
+      [pool[i], pool[j]] = [pool[j], pool[i]];
+    }
     const picks = pool.slice(0, 8);
     grid.innerHTML = picks.map(s => `
       <a class="rec-card" href="go.html?u=${encodeURIComponent(s.url)}">
@@ -260,6 +265,8 @@
       ? '点击「继续」恢复倒计时'
       : '如不希望等待，可点击「立即前往」';
     $('timerRow').classList.toggle('paused', paused);
+    // 最后 3 秒紧迫提示
+    $('timerRow').classList.toggle('urgent', !paused && countdown <= 3 && countdown > 0);
     const btn = $('pauseBtn');
     btn.textContent = paused ? '继续倒计时' : '暂停自动跳转';
     btn.classList.toggle('resume', paused);
@@ -304,10 +311,6 @@
     $('timerText').textContent = '正在跳转…';
 
     const target = site.url;
-    let jumped = false;
-    // 侦测跳转是否真的发生（部分浏览器/网络会静默失败）
-    window.addEventListener('pagehide', () => { jumped = true; }, { once: true });
-    window.addEventListener('beforeunload', () => { jumped = true; }, { once: true });
 
     // 主跳转
     try {
@@ -318,7 +321,7 @@
 
     // 兜底：若 2.5 秒后仍在当前页（跳转被拦截），给出新窗口方案
     setTimeout(() => {
-      if (jumped || location.href !== PAGE_HREF) return;
+      if (location.href !== PAGE_HREF) return;
       jumpLock = 'fallback';
       $('goNow').classList.remove('busy');
       $('goNow').classList.add('fallback');
@@ -336,7 +339,14 @@
   function copyLink() {
     if (!site) return;
     const text = site.url;
-    const done = () => showToast('链接已复制');
+    const btn = $('copyBtn');
+    const done = () => {
+      showToast('链接已复制');
+      if (btn) {
+        btn.classList.add('copied');
+        setTimeout(() => btn.classList.remove('copied'), 1600);
+      }
+    };
     if (navigator.clipboard && navigator.clipboard.writeText) {
       navigator.clipboard.writeText(text).then(done).catch(() => fallbackCopy(text, done));
     } else {
@@ -411,12 +421,29 @@
       s.async = true;
       s.src = 'https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=' + encodeURIComponent(cfg.client);
       s.crossOrigin = 'anonymous';
+      let pushed = false;
       s.onload = () => {
+        if (pushed) return;
+        pushed = true;
         document.querySelectorAll('ins.adsbygoogle').forEach(() => {
           try { (window.adsbygoogle = window.adsbygoogle || []).push({}); } catch (e) {}
         });
       };
+      // 脚本加载失败（被墙/拦截）→ 隐藏空广告位，不留白框
+      s.onerror = () => {
+        slots.forEach(name => {
+          const el = $('ad-' + name);
+          if (el && el.querySelector('ins.adsbygoogle')) el.hidden = true;
+        });
+        const wrap = $('adMobileWrap');
+        if (wrap) wrap.style.display = 'none';
+        document.body.classList.remove('has-mobile-ad');
+      };
       document.head.appendChild(s);
+      // 双保险：4 秒后脚本仍未就绪也按失败处理
+      setTimeout(() => {
+        if (!pushed && !(window.adsbygoogle && window.adsbygoogle.loaded)) s.onerror && s.onerror();
+      }, 4000);
     }
 
     if (test) {
@@ -485,6 +512,7 @@
     $('copyBtn').addEventListener('click', copyLink);
 
     document.addEventListener('keydown', e => {
+      if (!site) return; // 无效链接页：不拦截任何按键
       if (e.key === 'Enter' && !e.metaKey && !e.ctrlKey) { e.preventDefault(); goNow(); }
       if (e.key === ' ') { e.preventDefault(); togglePause(); }
     });

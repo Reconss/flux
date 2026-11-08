@@ -74,7 +74,17 @@ function genPlaceholder(id, name, url) {
     `</g></svg>`;
 }
 
+// 源自动拉黑：某个源连续失败 3 次后跳过（网络环境常只放行部分图标源，避免每个站都等满超时）
+const srcFailCount = new Map();
+const SRC_FAIL_LIMIT = 3;
+function srcBlocked(u) { return (srcFailCount.get(u.split('/')[2]) || 0) >= SRC_FAIL_LIMIT; }
+function srcRecord(u, ok) {
+  const host = u.split('/')[2];
+  srcFailCount.set(host, ok ? 0 : (srcFailCount.get(host) || 0) + 1);
+}
+
 async function fetchIcon(url) {
+  if (srcBlocked(url)) return null;
   try {
     const ctrl = new AbortController();
     const t = setTimeout(() => ctrl.abort(), TIMEOUT_MS);
@@ -84,14 +94,16 @@ async function fetchIcon(url) {
       signal: ctrl.signal,
     });
     clearTimeout(t);
-    if (!r.ok) return null;
+    if (!r.ok) { srcRecord(url, false); return null; }
     const buf = Buffer.from(await r.arrayBuffer());
-    if (buf.length < MIN_BYTES) return null;
+    if (buf.length < MIN_BYTES) { srcRecord(url, false); return null; }
     const ct = r.headers.get('content-type') || '';
     // Google/Bing 对“无图标域名”会回默认灰色地球（200），体积偏小 → 不缓存，避免污染
-    if (/google\.com\/s2\/favicons|bing\.com\/favicon/.test(url) && extFor(ct) === 'png' && buf.length < 700) return null;
+    if (/google\.com\/s2\/favicons|bing\.com\/favicon/.test(url) && extFor(ct) === 'png' && buf.length < 700) { srcRecord(url, false); return null; }
+    srcRecord(url, true);
     return { buf, ext: extFor(ct) };
   } catch {
+    srcRecord(url, false);
     return null;
   }
 }
